@@ -9,7 +9,7 @@ import {
   Music, Share2, Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { translations, categories, companyData, testimonials } from './constants';
+import { translations, categories, companyData, testimonialsData } from './constants';
 import { supabase } from './lib/supabase';
 
 const categoryIcons: { [key: string]: React.ElementType } = {
@@ -39,15 +39,23 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const { scrollY } = useScroll();
   const t = translations[lang];
+  const testimonials = testimonialsData[lang];
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-    projectType: 'Industrial Sourcing',
+    projectType: lang === 'id' ? 'Sourcing Industri' : 'Industrial Sourcing',
     details: ''
   });
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      projectType: lang === 'id' ? 'Sourcing Industri' : 'Industrial Sourcing'
+    }));
+  }, [lang]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -119,10 +127,10 @@ export default function App() {
   };
 
   const heroSlides = [
-            {
+      {
         image: "https://lh3.googleusercontent.com/d/1WKpDZ93a_5rCWh53yBS2kDdK2Fi4UBKi",
-        title: lang === 'id' ? "Trading Company Terpercaya" : "Trusted Trading Company",
-        subtitle: lang === 'id' ? "Penyedia komponen industri dengan jaringan global dan dukungan lokal." : "Industrial component provider with global network and local support."
+        title: t.hero.title,
+        subtitle: t.hero.subtitle
       },
       {
         image: "https://lh3.googleusercontent.com/d/17jdN9IlQTKxEkE6uFhvbuWFQCVidTnCd",
@@ -188,7 +196,7 @@ export default function App() {
               </div>
               <div className="flex flex-col">
                 <span className="font-black text-sm sm:text-lg md:text-xl tracking-tighter block leading-none text-slate-900">Presitama</span>
-                <span className="text-[7px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 block mt-0.5 sm:mt-1 tracking-[0.2em] font-sans">SERVICE INDUSTRY</span>
+                <span className="text-[7px] sm:text-[9px] md:text-[10px] font-bold text-slate-500 block mt-0.5 sm:mt-1 tracking-[0.2em] font-sans">{lang === 'id' ? 'INDUSTRI LAYANAN' : 'SERVICE INDUSTRY'}</span>
               </div>
             </div>
 
@@ -197,7 +205,7 @@ export default function App() {
                 { id: 'home', label: t.nav.home },
                 { id: 'categories', label: t.nav.categories },
                 { id: 'about', label: t.nav.about },
-                { id: 'process', label: 'Process' },
+                { id: 'process', label: t.nav.process },
               ].map((item) => (
                 <button 
                   key={item.id}
@@ -255,37 +263,37 @@ export default function App() {
                 <Hammer className="w-5 h-5" />
               </div>
               <div className="flex flex-col">
-                <span className="font-black text-xl tracking-tighter block leading-none text-slate-900">Presitama</span>
-                <span className="text-[10px] font-bold text-slate-500 block mt-1 tracking-[0.2em] font-sans">SERVICE INDUSTRY</span>
+                <span className="font-black text-lg tracking-tighter block leading-none text-slate-900">Presitama</span>
+                <span className="text-[9px] font-bold text-slate-500 block mt-1 tracking-[0.15em] font-sans">{lang === 'id' ? 'INDUSTRI LAYANAN' : 'SERVICE INDUSTRY'}</span>
               </div>
             </div>
-            <div className="space-y-8">
-              {['home', 'categories', 'about', 'contact'].map((item) => (
+            <div className="space-y-6">
+              {['home', 'categories', 'about', 'process', 'contact'].map((item) => (
                 <button 
                   key={item}
                   onClick={() => scrollTo(item === 'home' ? 'home' : item)}
-                  className="block text-lg font-bold text-slate-900 text-left hover:text-blue-600 transition-colors"
+                   className="block text-base font-bold text-slate-900 text-left hover:text-blue-600 transition-colors"
                 >
                   {t.nav[item as keyof typeof t.nav]}
                 </button>
               ))}
             </div>
-            <div className="mt-auto space-y-6 pt-8 border-t border-slate-100">
+            <div className="mt-auto space-y-4 pt-6 border-t border-slate-100">
                <a 
                 href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-green-500 text-white font-bold shadow-lg"
+                className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-green-500 text-white font-bold shadow-lg text-sm"
               >
-                <MessageCircle className="w-6 h-6" />
+                <MessageCircle className="w-5 h-5" />
                 {t.hero.contactCta} (WhatsApp)
               </a>
                <button 
                 onClick={toggleLang}
-                className="flex items-center gap-3 text-lg font-bold text-slate-600"
+                className="flex items-center gap-3 text-sm font-bold text-slate-600"
               >
-                <Globe className="w-5 h-5" />
-                {lang === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+                <Globe className="w-4 h-4" />
+                {lang === 'id' ? 'English' : 'Bahasa Indonesia'}
               </button>
             </div>
           </motion.div>
@@ -345,7 +353,7 @@ export default function App() {
                   
                   <h1 className="text-3xl sm:text-5xl lg:text-5xl leading-[1.1] tracking-tighter mb-8 sm:mb-12 flex flex-col">
                     <span className="font-light text-slate-900">{heroSlides[currentSlide].title}</span>
-                    <span className="font-bold text-slate-900">& {lang === 'id' ? 'Hero Teknik' : 'Technical Hero'}</span>
+                    <span className="font-bold text-slate-900">& {t.hero.technicalHero}</span>
                     <span className="font-light text-slate-400 italic">Excellence</span>
                   </h1>
                   
@@ -359,14 +367,14 @@ export default function App() {
                         className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full font-bold transition-all duration-300 hover:scale-105 hover:shadow-xl bg-slate-900 text-white hover:bg-slate-800"
                       >
                         <Play className="w-5 h-5 fill-current" />
-                        {lang === 'id' ? 'Lihat Portofolio' : 'View Portofolio'}
+                        {t.hero.viewPortfolio}
                       </button>
                       <button 
-                        onClick={() => scrollTo('about')}
+                        onClick={() => scrollTo('contact')}
                         className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full border border-slate-200 font-bold transition-all duration-300 hover:shadow-lg hover:scale-105 bg-white shadow-sm"
                       >
                         <Calendar className="w-5 h-5" />
-                        Request Consultation
+                        {t.hero.reqConsultation}
                       </button>
                     </div>
                   </div>
@@ -413,7 +421,7 @@ export default function App() {
                 {/* Main Card */}
                 <div className="relative rounded-[3rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] p-10 bg-white group">
                   <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="px-4 py-1.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 uppercase tracking-widest">Industrial Sourcing</span>
+                    <span className="px-4 py-1.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 uppercase tracking-widest">{t.contact.form.projectType}</span>
                     <span className="px-4 py-1.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 uppercase tracking-widest">Global Parts</span>
                     <span className="px-4 py-1.5 rounded-full text-[10px] font-bold bg-slate-900 text-white uppercase tracking-widest">Featured</span>
                   </div>
@@ -454,14 +462,14 @@ export default function App() {
                     onClick={() => scrollTo('categories')}
                     className="w-full py-5 px-4 rounded-3xl bg-slate-900 text-white font-bold text-sm transition-all duration-300 hover:bg-blue-600 hover:shadow-2xl hover:scale-[1.02]"
                   >
-                    View Project Details
+                    {t.categories.productDetails}
                   </button>
                 </div>
  
                 {/* Floating Overlay Box */}
                 <div className="absolute -top-10 -right-10 w-56 hidden xl:block z-20">
                   <div className="rounded-[2rem] shadow-2xl overflow-hidden bg-white/90 backdrop-blur-xl border border-white/50 p-6 flex flex-col items-center text-center">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Support Center</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">{lang === 'id' ? 'Pusat Dukungan' : 'Support Center'}</p>
                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden mb-4 group cursor-pointer">
                       <img src="https://lh3.googleusercontent.com/d/1WKpDZ93a_5rCWh53yBS2kDdK2Fi4UBKi" className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="Support" />
                       <div className="absolute inset-0 bg-slate-900/20 flex items-center justify-center">
@@ -490,10 +498,10 @@ export default function App() {
               >
                 <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full text-[10px] font-bold mb-6 bg-blue-50 text-blue-700 uppercase tracking-widest border border-blue-100">
                   <Compass className="w-3 h-3" />
-                  Contracting Expertise
+                  {t.process.badge}
                 </div>
                 <h2 className="text-5xl lg:text-6xl font-light tracking-tight text-slate-900 leading-snug">
-                  High-Performance <span className="font-bold">Technical Portfolio</span>
+                  {lang === 'id' ? 'Portofolio' : 'High-Performance'} <span className="font-bold">{t.process.title}</span>
                 </h2>
               </motion.div>
               <motion.div 
@@ -504,13 +512,13 @@ export default function App() {
               >
                 <div className="text-right hidden sm:block">
                   <p className="text-3xl font-bold text-slate-900">12+</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Specialized Segments</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.categories.specialized}</p>
                 </div>
                 <button 
                   onClick={() => scrollTo('contact')}
                   className="px-10 py-5 rounded-full bg-slate-900 text-white font-bold hover:bg-blue-600 transition-all duration-300 flex items-center gap-3 group shadow-xl hover:shadow-blue-500/20"
                 >
-                  Full Catalog
+                  {t.categories.fullCatalog}
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
               </motion.div>
@@ -546,7 +554,7 @@ export default function App() {
 
                       <div className="p-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <span className="text-[9px] font-bold text-blue-600 uppercase tracking-[0.2em] leading-none">Industrial</span>
+                          <span className="text-[9px] font-bold text-blue-600 uppercase tracking-[0.2em] leading-none">{t.categories.industrial}</span>
                           <div className="h-[1px] w-4 bg-slate-100" />
                           <span className="text-[9px] font-bold text-slate-300">0{i + 1}</span>
                         </div>
@@ -554,7 +562,7 @@ export default function App() {
                         
                         <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-auto">
                           <button className="text-[10px] font-bold text-slate-900 flex items-center gap-2 group/btn hover:text-blue-600 transition-colors uppercase tracking-[0.2em] leading-none">
-                            PRODUCT DETAILS
+                            {t.categories.productDetails}
                             <ArrowUpRight className="w-3 h-3 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
                           </button>
                         </div>
@@ -579,27 +587,27 @@ export default function App() {
                 viewport={{ once: true }}
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-blue-100 text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-6">
-                  Technical Excellence
+                  {t.process.globalSourcing}
                 </div>
                 <h2 className="text-5xl font-light leading-tight mb-8 text-slate-900">
-                  How We Help <span className="font-bold">Industrial Partners Thrive</span>
+                  {t.process.howWeHelp.split(' ').slice(0, -3).join(' ')} <span className="font-bold">{t.process.howWeHelp.split(' ').slice(-3).join(' ')}</span>
                 </h2>
                 
                 <div className="space-y-10">
                   {[
                     { 
-                      title: "Consultative Sourcing", 
-                      desc: "We don't just sell parts; we analyze your technical requirements to provide optimized machinery solutions.",
+                      title: t.process.steps.sourcing.t, 
+                      desc: t.process.steps.sourcing.d,
                       icon: Compass 
                     },
                     { 
-                      title: "Global Supply Chain", 
-                      desc: "Strategic partnerships with global manufacturers ensure you get genuine parts at competitive costs.",
+                      title: t.process.steps.supplyChain.t, 
+                      desc: t.process.steps.supplyChain.d,
                       icon: Layers
                     },
                     { 
-                      title: "Turnkey Logistics", 
-                      desc: "Headquartered in MM2100 Bekasi, we provide just-in-time delivery for critical industrial operations.",
+                      title: t.process.steps.logistics.t, 
+                      desc: t.process.steps.logistics.d,
                       icon: Clock
                     }
                   ].map((step, i) => (
@@ -637,8 +645,8 @@ export default function App() {
                           <Settings className="w-8 h-8 animate-spin-slow" />
                         </div>
                         <div>
-                          <p className="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">Local Support Hub</p>
-                          <h4 className="text-white text-xl font-bold">MM2100 Bekasi Distribution</h4>
+                          <p className="text-white/60 text-xs font-bold uppercase tracking-wider mb-1">{t.process.hubLabel}</p>
+                          <h4 className="text-white text-xl font-bold">{t.process.hubTitle}</h4>
                         </div>
                       </div>
                     </div>
@@ -653,7 +661,7 @@ export default function App() {
                     </div>
                     <div>
                       <p className="text-2xl font-bold text-slate-900">24/7</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">Global Sourcing</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none">{t.process.globalSourcing}</p>
                     </div>
                   </div>
                   <div className="flex -space-x-2">
@@ -686,11 +694,11 @@ export default function App() {
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-10 bg-white/10 text-white">
                   <Users className="w-4 h-4" />
-                  Trusted by Industrial Leaders
+                  {t.about.trustedBy}
                 </div>
                 
                 <h2 className="text-4xl lg:text-5xl font-light leading-tight mb-8">
-                  Reliable Technical <span className="font-bold text-blue-400">Solution Delivery</span>
+                  {t.about.solutionDelivery.split(' ').slice(0, -2).join(' ')} <span className="font-bold text-blue-400">{t.about.solutionDelivery.split(' ').slice(-2).join(' ')}</span>
                 </h2>
                 
                 <p className="text-lg text-slate-300 leading-relaxed font-light">
@@ -732,8 +740,8 @@ export default function App() {
               {[
                 { val: "10+", label: t.about.experience },
                 { val: "500+", label: t.about.projects },
-                { val: "100+", label: "Active Clients" },
-                { val: "99%", label: "Satisfaction" }
+                { val: "100+", label: t.about.activeClients },
+                { val: "99%", label: t.about.satisfaction }
               ].map((stat, i) => (
                 <div key={i}>
                   <p className="text-4xl font-light mb-2">{stat.val}</p>
@@ -755,22 +763,22 @@ export default function App() {
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 bg-blue-100 text-blue-800">
                   <MessageCircle className="w-4 h-4" />
-                  Get In Touch
+                  {t.contact.getInTouch}
                 </div>
                 
                 <h2 className="text-5xl font-light tracking-tight mb-6">
-                  Ready to Support Your <span className="font-semibold">Operations?</span>
+                  {t.contact.readyToSupport} <span className="font-semibold">{t.contact.readyBold}</span>
                 </h2>
                 
                 <p className="text-xl text-slate-600 mb-12 font-light leading-relaxed">
-                   Let's discuss your technical needs and create a resilient supply chain together. Schedule a consultation for your next equipment maintenance.
+                   {t.contact.desc}
                 </p>
 
                 <div className="space-y-6">
                   {[
-                    { icon: Phone, title: "Phone", value: companyData.phone, color: "blue" },
-                    { icon: Mail, title: "Email", value: companyData.email, color: "green" },
-                    { icon: MapPin, title: "MM2100 Bekasi Area", value: companyData.address, color: "purple" }
+                    { icon: Phone, title: t.contact.labels.phone, value: companyData.phone, color: "blue" },
+                    { icon: Mail, title: t.contact.labels.email, value: companyData.email, color: "green" },
+                    { icon: MapPin, title: t.contact.labels.location, value: companyData.address, color: "purple" }
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-6 group">
                       <div className={`p-4 rounded-2xl bg-${item.color}-50 text-${item.color}-600 group-hover:scale-110 transition-transform`}>
@@ -794,7 +802,7 @@ export default function App() {
                   <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">First Name</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.form.firstName}</label>
                         <input 
                           type="text" 
                           name="firstName"
@@ -802,11 +810,11 @@ export default function App() {
                           onChange={handleInputChange}
                           required
                           className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all placeholder:text-slate-400" 
-                          placeholder="John" 
+                          placeholder={lang === 'id' ? 'Nama Depan' : 'First Name'} 
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Last Name</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.form.lastName}</label>
                         <input 
                           type="text" 
                           name="lastName"
@@ -814,13 +822,13 @@ export default function App() {
                           onChange={handleInputChange}
                           required
                           className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all placeholder:text-slate-400" 
-                          placeholder="Doe" 
+                          placeholder={lang === 'id' ? 'Nama Belakang' : 'Last Name'} 
                         />
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.form.email}</label>
                         <input 
                           type="email" 
                           name="email"
@@ -845,21 +853,21 @@ export default function App() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Project Type</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.form.projectType}</label>
                       <select 
                         name="projectType"
                         value={formData.projectType}
                         onChange={handleInputChange}
                         className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all bg-white font-medium"
                       >
-                        <option>Industrial Sourcing</option>
-                        <option>Automation Design</option>
-                        <option>Testing Equipment</option>
-                        <option>Maintenance Support</option>
+                        <option>{lang === 'id' ? 'Sourcing Industri' : 'Industrial Sourcing'}</option>
+                        <option>{lang === 'id' ? 'Desain Otomasi' : 'Automation Design'}</option>
+                        <option>{lang === 'id' ? 'Peralatan Pengujian' : 'Testing Equipment'}</option>
+                        <option>{lang === 'id' ? 'Dukungan Pemeliharaan' : 'Maintenance Support'}</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Inquiry Details</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-2">{t.contact.form.message}</label>
                       <textarea 
                         name="details"
                         rows={4} 
@@ -867,7 +875,7 @@ export default function App() {
                         onChange={handleInputChange}
                         required
                         className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-600 outline-none transition-all resize-none placeholder:text-slate-400" 
-                        placeholder="Tell us more..."
+                        placeholder={t.contact.subtitle}
                       ></textarea>
                     </div>
                     
@@ -878,7 +886,7 @@ export default function App() {
                         className="p-4 rounded-xl bg-green-50 text-green-700 text-sm font-medium flex items-center gap-3"
                       >
                         <CheckCircle className="w-5 h-5" />
-                        {lang === 'id' ? 'Pesan berhasil terkirim! Terima kasih.' : 'Message sent successfully! Thank you.'}
+                        {t.contact.form.success}
                       </motion.div>
                     )}
 
@@ -889,7 +897,7 @@ export default function App() {
                         className="p-4 rounded-xl bg-red-50 text-red-700 text-sm font-medium flex items-center gap-3"
                       >
                         <X className="w-5 h-5" />
-                        {lang === 'id' ? 'Terjadi kesalahan. Silakan coba lagi.' : 'An error occurred. Please try again.'}
+                        {t.contact.form.error}
                       </motion.div>
                     )}
 
@@ -900,10 +908,10 @@ export default function App() {
                       {isSubmitting ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin" />
-                          {lang === 'id' ? 'Mengirim...' : 'Sending...'}
+                          {t.contact.form.submitting}
                         </>
                       ) : (
-                        'Request Solution'
+                        t.contact.form.submit
                       )}
                     </button>
                   </form>
@@ -925,11 +933,11 @@ export default function App() {
                  </div>
                   <div className="flex flex-col">
                     <span className="font-bold text-lg tracking-tighter block leading-none">Presitama</span>
-                    <span className="text-[12px] font-bold text-slate-400 block mt-1 tracking-widest font-sans">SERVICE INDUSTRY</span>
+                    <span className="text-[12px] font-bold text-slate-400 block mt-1 tracking-widest font-sans">{lang === 'id' ? 'INDUSTRI LAYANAN' : 'SERVICE INDUSTRY'}</span>
                   </div>
               </div>
-              <p className="text-slate-400 font-light leading-relaxed mb-8">
-                Delivering high-precision technical trading services with industrial reliability and expert support for the MM2100 Bekasi region.
+              <p className="text-[10px] sm:text-xs text-slate-400 font-light leading-relaxed mb-8">
+                {t.footer.desc}
               </p>
               <div className="flex gap-4">
                  {[Globe, Phone, Mail].map((Icon, i) => (
@@ -941,27 +949,27 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">Solutions</h4>
+              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">{lang === 'id' ? 'Solusi' : 'Solutions'}</h4>
               <ul className="space-y-4 text-slate-400 font-light text-sm">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Industrial Automation</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Pneumatic Systems</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Testing Equipment</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Global Sourcing</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Otomasi Industri' : 'Industrial Automation'}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{t.categories.items['pneumatic-system']}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{t.categories.items['measuring-testing']}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{t.process.globalSourcing}</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">Industries</h4>
+              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">{lang === 'id' ? 'Industri' : 'Industries'}</h4>
               <ul className="space-y-4 text-slate-400 font-light text-sm">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Automotive OEM</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Consumer Electronics</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Food & Beverage</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">General Manufacture</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Otomotif OEM' : 'Automotive OEM'}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Elektronik Konsumen' : 'Consumer Electronics'}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Makanan & Minuman' : 'Food & Beverage'}</a></li>
+                <li><a href="#" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Manufaktur Umum' : 'General Manufacture'}</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">Contact</h4>
+              <h4 className="font-bold text-xs uppercase tracking-[0.2em] mb-8 text-slate-500">{t.nav.contact}</h4>
               <p className="text-slate-400 font-light leading-relaxed text-sm mb-4">
                 {companyData.address}
               </p>
@@ -979,7 +987,7 @@ export default function App() {
           </div>
 
           <div className="pt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 text-xs font-bold uppercase tracking-widest leading-none">
-             <p>© 2026 {companyData.name}. ALL RIGHTS RESERVED.</p>
+             <p>© 2026 {companyData.name}. {t.footer.rights.toUpperCase()}</p>
              <div className="flex gap-8">
                 <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
                 <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
@@ -1022,19 +1030,19 @@ export default function App() {
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
                 <div className="absolute bottom-10 left-10 right-10 text-white hidden md:block">
                   <div className="px-3 py-1 rounded-full bg-blue-600/90 backdrop-blur-sm text-[9px] font-bold uppercase tracking-[0.2em] mb-4 inline-block border border-white/10">
-                    Product Identifier: PR-{selectedProduct.idNum}
+                    {lang === 'id' ? 'Identifikasi Produk' : 'Product Identifier'}: PR-{selectedProduct.idNum}
                   </div>
                   <h4 className="text-xl font-bold tracking-tight uppercase leading-tight mb-2">{selectedProduct.title}</h4>
-                  <p className="text-white/70 text-sm font-light">Precision Engineering Solutions</p>
+                  <p className="text-white/70 text-sm font-light">{lang === 'id' ? 'Solusi Teknik Presisi' : 'Precision Engineering Solutions'}</p>
                 </div>
               </div>
 
               {/* Content Side */}
               <div className="md:w-1/2 p-10 lg:p-14 overflow-y-auto bg-white">
                 <div className="flex items-center gap-2 mb-6">
-                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest leading-none">Catalog Category</span>
+                  <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest leading-none">{lang === 'id' ? 'Kategori Katalog' : 'Catalog Category'}</span>
                   <div className="h-[1px] w-8 bg-slate-100" />
-                  <span className="text-[10px] font-bold text-slate-400 capitalize">{selectedProduct.id.replace('-', ' ')}</span>
+                  <span className="text-[10px] font-bold text-slate-400 capitalize">{t.categories.items[selectedProduct.id as keyof typeof t.categories.items] || selectedProduct.id.replace('-', ' ')}</span>
                 </div>
                 
                 <h3 className="text-2xl font-bold text-slate-900 mb-8 tracking-tight md:hidden">
@@ -1043,13 +1051,19 @@ export default function App() {
 
                 <div className="prose prose-slate prose-sm max-w-none mb-10">
                   <p className="text-slate-600 leading-relaxed text-[15px] font-light mb-4">
-                    Kami di **PT. Presitama Service Industry** berkomitmen untuk menyediakan solusi **{selectedProduct.title.toLowerCase()}** kelas dunia. Produk ini dirancang khusus untuk memenuhi kebutuhan operasional manufaktur yang presisi dan efisien, khususnya bagi industri di kawasan MM2100 Bekasi.
+                    {lang === 'id' 
+                      ? `Kami di **PT. Presitama Service Industry** berkomitmen untuk menyediakan solusi **${selectedProduct.title.toLowerCase()}** kelas dunia. Produk ini dirancang khusus untuk memenuhi kebutuhan operasional manufaktur yang presisi dan efisien, khususnya bagi industri di kawasan MM2100 Bekasi.`
+                      : `At **PT. Presitama Service Industry**, we are committed to providing world-class **${selectedProduct.title.toLowerCase()}** solutions. This product is specifically designed to meet precision and efficient manufacturing operational needs, especially for industries in the MM2100 Bekasi area.`}
                   </p>
                   <p className="text-slate-600 leading-relaxed text-[15px] font-light mb-4">
-                    Kelebihan utama dari sistem ini meliputi durabilitas tinggi untuk beban kerja industri berat, akurasi pemrosesan yang stabil, dan kemudahan integrasi dengan ekosistem pabrik pintar (smart factory). Kami menjamin setiap unit telah memenuhi standar sertifikasi internasional.
+                    {lang === 'id'
+                      ? "Kelebihan utama dari sistem ini meliputi durabilitas tinggi untuk beban kerja industri berat, akurasi pemrosesan yang stabil, dan kemudahan integrasi dengan ekosistem pabrik pintar (smart factory). Kami menjamin setiap unit telah memenuhi standar sertifikasi internasional."
+                      : "Key advantages of this system include high durability for heavy industrial workloads, stable processing accuracy, and ease of integration with smart factory ecosystems. We guarantee every unit meets international certification standards."}
                   </p>
                   <p className="text-slate-600 leading-relaxed text-[15px] font-light">
-                    Layanan purna jual kami mencakup inspeksi rutin, ketersediaan suku cadang asli yang cepat di gudang lokal kami, serta dukungan teknis langsung di lokasi oleh engineer berpengalaman untuk meminimalisir waktu henti produksi Anda.
+                    {lang === 'id'
+                      ? "Layanan purna jual kami mencakup inspeksi rutin, ketersediaan suku cadang asli yang cepat di gudang lokal kami, serta dukungan teknis langsung di lokasi oleh engineer berpengalaman untuk meminimalisir waktu henti produksi Anda."
+                      : "Our after-sales service includes routine inspections, fast availability of original spare parts at our local warehouse, and direct on-site technical support by experienced engineers to minimize your production downtime."}
                   </p>
                 </div>
 
@@ -1059,8 +1073,8 @@ export default function App() {
                       <Boxes className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Stok Status</p>
-                      <p className="text-slate-900 font-bold text-sm">Ready in Warehouse</p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">{lang === 'id' ? 'Status Stok' : 'Stock Status'}</p>
+                      <p className="text-slate-900 font-bold text-sm">{lang === 'id' ? 'Tersedia di Gudang' : 'Ready in Warehouse'}</p>
                     </div>
                   </div>
                   <div className="p-5 rounded-[1.5rem] bg-slate-50 border border-slate-100 flex items-center gap-4">
@@ -1068,28 +1082,47 @@ export default function App() {
                       <Clock className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Dukungan</p>
-                      <p className="text-slate-900 font-bold text-sm">Respons 24 Jam</p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">{lang === 'id' ? 'Dukungan' : 'Support'}</p>
+                      <p className="text-slate-900 font-bold text-sm">{lang === 'id' ? 'Respons 24 Jam' : '24-Hour Response'}</p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Detail Specification Section */}
+                <div className="mb-10 p-6 rounded-[2rem] bg-slate-900 text-white">
+                  <h4 className="text-xs font-bold uppercase tracking-[0.2em] mb-6 text-slate-400">{t.product.specTitle}</h4>
+                  <div className="space-y-3">
+                    {[
+                      { l: t.product.specs.material, v: "Premium Grade Alloy / Steel" },
+                      { l: t.product.specs.precision, v: "± 0.001mm" },
+                      { l: t.product.specs.temp, v: "-20°C to 120°C" },
+                      { l: t.product.specs.standard, v: "ISO 9001:2015 / JIS B" },
+                      { l: t.product.specs.application, v: "Automotive / Electronic / Aero" }
+                    ].map((spec, i) => (
+                      <div key={i} className="flex justify-between items-center text-[11px] border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                        <span className="text-white/50">{spec.l}</span>
+                        <span className="font-bold">{spec.v}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   <a 
-                    href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo PT. Presitama Service Industry, saya tertarik dengan produk ${selectedProduct.title}. Bisa minta penawaran harganya?`}
+                    href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=${lang === 'id' ? 'Halo PT. Presitama Service Industry, saya tertarik dengan produk' : 'Hello PT. Presitama Service Industry, I am interested in'} ${selectedProduct.title}. ${lang === 'id' ? 'Bisa minta penawaran harganya?' : 'Can I get a price quotation?'}`}
                     target="_blank"
                     rel="noreferrer"
                     className="w-full py-5 bg-slate-900 text-white rounded-[1.2rem] font-bold hover:bg-blue-600 transition-all flex items-center justify-center gap-3 shadow-xl shadow-slate-200 group"
                   >
-                    Minta Penawaran Harga
+                    {lang === 'id' ? 'Minta Penawaran Harga' : 'Request Quotation'}
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </a>
 
                   <div className="pt-8 border-t border-slate-100">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-5">Bagikan Solusi Ini</p>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-5">{lang === 'id' ? 'Bagikan Solusi Ini' : 'Share This Solution'}</p>
                     <div className="flex gap-4">
                       {[
-                        { Icon: MessageCircle, color: "bg-green-500", label: "WhatsApp", url: `https://wa.me/?text=Lihat solusi ${selectedProduct.title} dari PT. Presitama Service Industry: ${window.location.href}` },
+                        { Icon: MessageCircle, color: "bg-green-500", label: "WhatsApp", url: `https://wa.me/?text=${lang === 'id' ? 'Lihat solusi' : 'View solution'} ${selectedProduct.title} ${lang === 'id' ? 'dari' : 'from'} PT. Presitama Service Industry: ${window.location.href}` },
                         { Icon: Music, color: "bg-slate-900", label: "TikTok", url: "https://tiktok.com" },
                         { Icon: Instagram, color: "bg-pink-600", label: "Instagram", url: "https://instagram.com" },
                         { Icon: Facebook, color: "bg-blue-600", label: "Facebook", url: "https://facebook.com" },

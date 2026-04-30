@@ -4,6 +4,7 @@ export interface Translation {
     home: string;
     categories: string;
     about: string;
+    process: string;
     contact: string;
   };
   hero: {
@@ -12,6 +13,9 @@ export interface Translation {
     subtitle: string;
     cta: string;
     contactCta: string;
+    technicalHero: string;
+    viewPortfolio: string;
+    reqConsultation: string;
   };
   about: {
     title: string;
@@ -19,31 +23,79 @@ export interface Translation {
     experience: string;
     projects: string;
     satisfaction: string;
+    activeClients: string;
+    trustedBy: string;
+    solutionDelivery: string;
   };
   categories: {
     title: string;
     subtitle: string;
+    industrial: string;
+    portfolio: string;
+    specialized: string;
+    fullCatalog: string;
+    productDetails: string;
+    back: string;
     items: {
       [key: string]: string;
     };
   };
+  process: {
+    badge: string;
+    title: string;
+    howWeHelp: string;
+    steps: {
+      sourcing: { t: string; d: string };
+      supplyChain: { t: string; d: string };
+      logistics: { t: string; d: string };
+    };
+    hubLabel: string;
+    hubTitle: string;
+    globalSourcing: string;
+  };
   contact: {
     title: string;
     subtitle: string;
+    getInTouch: string;
+    readyToSupport: string;
+    readyBold: string;
+    desc: string;
     address: string;
     phone: string;
     email: string;
+    labels: {
+      phone: string;
+      email: string;
+      location: string;
+    };
     form: {
-      name: string;
+      firstName: string;
+      lastName: string;
       email: string;
       subject: string;
       message: string;
       phone: string;
+      projectType: string;
       submit: string;
+      submitting: string;
+      success: string;
+      error: string;
+    };
+  };
+  product: {
+    specTitle: string;
+    share: string;
+    specs: {
+      material: string;
+      precision: string;
+      temp: string;
+      standard: string;
+      application: string;
     };
   };
   footer: {
     rights: string;
+    desc: string;
   };
 }
 
@@ -53,6 +105,7 @@ export const translations: { id: Translation; en: Translation } = {
       home: "Beranda",
       categories: "Kategori Produk",
       about: "Tentang Kami",
+      process: "Proses",
       contact: "Kontak",
     },
     hero: {
@@ -61,17 +114,29 @@ export const translations: { id: Translation; en: Translation } = {
       subtitle: "PT. Presitama Service Industry menyediakan berbagai komponen mesin industri dan alat teknik berkualitas tinggi untuk mendukung efisiensi operasional Anda.",
       cta: "Lihat Produk",
       contactCta: "Kontak Kami",
+      technicalHero: "Hero Teknik",
+      viewPortfolio: "Lihat Portofolio",
+      reqConsultation: "Konsultasi Gratis",
     },
     about: {
-      title: "Tentang PT. Presitama Service Industry",
+      title: "Tentang Kami",
       description: "Kami adalah PT. Presitama Service Industry, perusahaan trading yang berbasis di Kawasan Industri MM2100, Cibitung. Kami berfokus pada penyediaan berbagai macam peralatan pengujian, sistem robotik, dan komponen mesin industri dengan standar kualitas internasional.",
       experience: "Tahun Pengalaman",
       projects: "Produk Terdistribusi",
-      satisfaction: "Kepuasan Pelanggan",
+      satisfaction: "Kepuasan",
+      activeClients: "Klien Aktif",
+      trustedBy: "Dipercaya oleh Pemimpin Industri",
+      solutionDelivery: "Pengiriman Solusi Teknis",
     },
     categories: {
       title: "Kategori Produk Kami",
       subtitle: "Kami menawarkan berbagai macam produk teknis dari brand ternama untuk memenuhi kebutuhan industri Anda.",
+      industrial: "Industri",
+      portfolio: "Portofolio Teknis",
+      specialized: "Segmen Khusus",
+      fullCatalog: "Katalog Lengkap",
+      productDetails: "DETAIL PRODUK",
+      back: "Kembali",
       items: {
         "measuring-testing": "Alat Ukur & Pengujian",
         "robotic-integration": "Robotik & Integrasi",
@@ -91,23 +156,71 @@ export const translations: { id: Translation; en: Translation } = {
         "others": "Lainnya",
       },
     },
+    process: {
+      badge: "Keahlian Kontrak",
+      title: "Portofolio Teknis",
+      howWeHelp: "Bagaimana Kami Membantu Mitra Industri Berkembang",
+      steps: {
+        sourcing: { 
+          t: "Sourcing Konsultatif", 
+          d: "Kami tidak hanya menjual suku cadang; kami menganalisis persyaratan teknis Anda untuk memberikan solusi mesin yang optimal." 
+        },
+        supplyChain: { 
+          t: "Rantai Pasok Global", 
+          d: "Kemitraan strategis dengan produsen global memastikan Anda mendapatkan suku cadang asli dengan biaya kompetitif." 
+        },
+        logistics: { 
+          t: "Logistik Turnkey", 
+          d: "Berkantor pusat di MM2100 Bekasi, kami menyediakan pengiriman tepat waktu untuk operasi industri kritis." 
+        },
+      },
+      hubLabel: "Pusat Distribusi Lokal",
+      hubTitle: "MM2100 Bekasi Distribution",
+      globalSourcing: "Sourcing Global",
+    },
     contact: {
       title: "Hubungi Kami",
       subtitle: "Konsultasikan kebutuhan teknis Anda dengan tim ahli kami.",
+      getInTouch: "Hubungi Kami",
+      readyToSupport: "Siap Mendukung",
+      readyBold: "Operasi Anda?",
+      desc: "Mari diskusikan kebutuhan teknis Anda dan bangun rantai pasokan yang tangguh bersama. Jadwalkan konsultasi untuk perawatan peralatan Anda berikutnya.",
       address: "Alamat",
       phone: "Telp/WA",
       email: "Email",
+      labels: {
+        phone: "Telepon",
+        email: "Email",
+        location: "Kawasan MM2100 Bekasi",
+      },
       form: {
-        name: "Nama Lengkap",
+        firstName: "Nama Depan",
+        lastName: "Nama Belakang",
         email: "Alamat Email",
         subject: "Subjek",
         message: "Pesan Anda",
         phone: "No Telp/HP",
+        projectType: "Jenis Proyek",
         submit: "Kirim Pesan",
+        submitting: "Mengirim...",
+        success: "Pesan berhasil terkirim!",
+        error: "Gagal mengirim pesan. Silakan coba lagi.",
+      },
+    },
+    product: {
+      specTitle: "Detail Spesifikasi Produk",
+      share: "Bagikan",
+      specs: {
+        material: "Material",
+        precision: "Presisi",
+        temp: "Suhu Operasi",
+        standard: "Standar",
+        application: "Aplikasi",
       },
     },
     footer: {
       rights: "Semua Hak Dilindungi.",
+      desc: "Memberikan layanan perdagangan teknis presisi tinggi dengan keandalan industri dan dukungan ahli untuk wilayah MM2100 Bekasi.",
     },
   },
   en: {
@@ -115,6 +228,7 @@ export const translations: { id: Translation; en: Translation } = {
       home: "Home",
       categories: "Product Categories",
       about: "About Us",
+      process: "Process",
       contact: "Contact",
     },
     hero: {
@@ -123,17 +237,29 @@ export const translations: { id: Translation; en: Translation } = {
       subtitle: "PT. Presitama Service Industry provides high-quality industrial machine components and technical tools to support your operational efficiency.",
       cta: "View Products",
       contactCta: "Contact Us",
+      technicalHero: "Technical Hero",
+      viewPortfolio: "View Portfolio",
+      reqConsultation: "Request Consultation",
     },
     about: {
-      title: "About PT. Presitama Service Industry",
+      title: "About Us",
       description: "We are a trading company based in the MM2100 Industrial Area, Cibitung. We focus on providing a wide range of testing equipment, robotic systems, and industrial machine components with international quality standards.",
       experience: "Years of Experience",
       projects: "Products Distributed",
-      satisfaction: "Client Satisfaction",
+      satisfaction: "Satisfaction",
+      activeClients: "Active Clients",
+      trustedBy: "Trusted by Industrial Leaders",
+      solutionDelivery: "Technical Solution Delivery",
     },
     categories: {
       title: "Our Product Categories",
       subtitle: "We offer a wide range of technical products from renowned brands to meet your industrial needs.",
+      industrial: "Industrial",
+      portfolio: "Technical Portfolio",
+      specialized: "Specialized Segments",
+      fullCatalog: "Full Catalog",
+      productDetails: "PRODUCT DETAILS",
+      back: "Back",
       items: {
         "measuring-testing": "Measuring & Testing Equipment",
         "robotic-integration": "Robotic & Integration",
@@ -153,23 +279,71 @@ export const translations: { id: Translation; en: Translation } = {
         "others": "Others",
       },
     },
+    process: {
+      badge: "Contracting Expertise",
+      title: "Technical Portfolio",
+      howWeHelp: "How We Help Industrial Partners Thrive",
+      steps: {
+        sourcing: { 
+          t: "Consultative Sourcing", 
+          d: "We don't just sell parts; we analyze your technical requirements to provide optimized machinery solutions." 
+        },
+        supplyChain: { 
+          t: "Global Supply Chain", 
+          d: "Strategic partnerships with global manufacturers ensure you get genuine parts at competitive costs." 
+        },
+        logistics: { 
+          t: "Turnkey Logistics", 
+          d: "Headquartered in MM2100 Bekasi, we provide just-in-time delivery for critical industrial operations." 
+        },
+      },
+      hubLabel: "Local Support Hub",
+      hubTitle: "MM2100 Bekasi Distribution",
+      globalSourcing: "Global Sourcing",
+    },
     contact: {
       title: "Contact Us",
       subtitle: "Consult your technical needs with our expert team.",
+      getInTouch: "Get In Touch",
+      readyToSupport: "Ready to Support Your",
+      readyBold: "Operations?",
+      desc: "Let's discuss your technical needs and build a resilient supply chain together. Schedule a consultation for your next equipment maintenance.",
       address: "Address",
       phone: "Telp/WA",
       email: "Email",
+      labels: {
+        phone: "Phone",
+        email: "Email",
+        location: "MM2100 Bekasi Area",
+      },
       form: {
-        name: "Full Name",
+        firstName: "First Name",
+        lastName: "Last Name",
         email: "Email Address",
         subject: "Subject",
         message: "Your Message",
         phone: "Phone Number",
+        projectType: "Project Type",
         submit: "Send Message",
+        submitting: "Sending...",
+        success: "Message sent successfully!",
+        error: "Failed to send message. Please try again.",
+      },
+    },
+    product: {
+      specTitle: "Detail Specification Product",
+      share: "Share",
+      specs: {
+        material: "Material",
+        precision: "Precision",
+        temp: "Operating Temp",
+        standard: "Standard",
+        application: "Application",
       },
     },
     footer: {
       rights: "All Rights Reserved.",
+      desc: "Delivering high-precision technical trading services with industrial reliability and expert support for the MM2100 Bekasi region.",
     },
   },
 };
@@ -200,28 +374,45 @@ export const companyData = {
   phone: "+6281310318868",
   businessType: "Trading Company",
   mapCoordinates: {
-    lat: -6.313467990095778,
-    lng: 107.08268419439531
-  }
+    lat: -6.3108,
+    lng: 107.1121,
+  },
 };
 
-export const testimonials = [
-  {
-    text: "Layanan PT. Presitama Service Industry sangat memuaskan. Peralatan ukur presisi mereka membantu kami menjaga standar kualitas di lini produksi.",
-    author: "Produksi Manager",
-    company: "Otomotif Bekasi",
-    rating: 5
-  },
-  {
-    text: "Solusi CNC dan dukungan teknisnya sangat responsif. Sangat membantu dalam meminimalisir downtime operasional pabrik.",
-    author: "Technical Lead",
-    company: "Elektronik MM2100",
-    rating: 5
-  },
-  {
-    text: "Pengiriman cepat dan suku cadang orisinal. Rekanan terpercaya untuk kebutuhan industri berkelanjutan.",
-    author: "Purchasing Dept",
-    company: "Manufaktur Umum",
-    rating: 5
-  }
-];
+export const testimonialsData: { [key: string]: { text: string; author: string; company: string }[] } = {
+  id: [
+    {
+      text: "Layanan PT. Presitama Service Industry sangat memuaskan. Peralatan ukur presisi mereka membantu kami menjaga standar kualitas di lini produksi.",
+      author: "Manajer Produksi",
+      company: "Otomotif Bekasi",
+    },
+    {
+      text: "Solusi CNC dan dukungan teknisnya sangat responsif. Sangat membantu dalam meminimalisir downtime operasional pabrik.",
+      author: "Technical Lead",
+      company: "Elektronik MM2100",
+    },
+    {
+      text: "Pengiriman cepat dan suku cadang orisinal. Rekanan terpercaya untuk kebutuhan industri berkelanjutan.",
+      author: "Purchasing Dept",
+      company: "Manufaktur Umum",
+    }
+  ],
+  en: [
+    {
+      text: "PT. Presitama Service Industry service is very satisfying. Their precision measuring equipment helps us maintain quality standards on the production line.",
+      author: "Production Manager",
+      company: "Bekasi Automotive",
+    },
+    {
+      text: "The CNC solutions and technical support are very responsive. Extremely helpful in minimizing factory operational downtime.",
+      author: "Technical Lead",
+      company: "MM2100 Electronics",
+    },
+    {
+      text: "Fast delivery and original spare parts. A trusted partner for sustainable industrial needs.",
+      author: "Purchasing Dept",
+      company: "General Manufacturing",
+    }
+  ]
+};
+
