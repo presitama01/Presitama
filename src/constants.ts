@@ -431,18 +431,18 @@ export const translations: { id: Translation; en: Translation } = {
 };
 
 export const categories = [
-  { id: "measuring-testing", icon: "Micrometer", image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800" },
-  { id: "robotic-integration", icon: "Cpu", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" },
-  { id: "pneumatic-system", icon: "Wind", image: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&q=80&w=800" },
-  { id: "conveyor-system", icon: "Repeat", image: "https://images.unsplash.com/photo-1565151443833-29bf2ba5dd8d?auto=format&fit=crop&q=80&w=800" },
-  { id: "linear-motion", icon: "ArrowRightLeft", image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800" },
-  { id: "miscellaneous", icon: "Boxes", image: "https://images.unsplash.com/photo-1581092921461-7d15cb89053e?auto=format&fit=crop&q=80&w=800" },
-  { id: "measuring-small", icon: "Ruler", image: "https://images.unsplash.com/photo-1530315598444-24933939379b?auto=format&fit=crop&q=80&w=800" },
-  { id: "measuring-system", icon: "Scan", image: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&q=80&w=800" },
-  { id: "material-testing", icon: "HardDrive", image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80&w=800" },
-  { id: "press-machine", icon: "Anchor", image: "https://images.unsplash.com/photo-1566353386641-7d1421ab2df1?auto=format&fit=crop&q=80&w=800" },
-  { id: "cnc-machine", icon: "Settings", image: "https://images.unsplash.com/photo-1621905252507-b354bcadcabc?auto=format&fit=crop&q=80&w=800" },
-  { id: "others", icon: "Plus", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" },
+  { id: "measuring-testing", title: "Precision Measuring & Testing", description: "High-end tools for industrial precision calibration and quality control.", icon: "Micrometer", image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800" },
+  { id: "robotic-integration", title: "Industrial Robotic Integration", description: "Comprehensive automation solutions for high-throughput manufacturing lines.", icon: "Cpu", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" },
+  { id: "pneumatic-system", title: "Pneumatic Control Systems", description: "Efficient air-powered components for versatile industrial applications.", icon: "Wind", image: "https://images.unsplash.com/photo-1537462715879-360eeb61a0ad?auto=format&fit=crop&q=80&w=800" },
+  { id: "conveyor-system", title: "Heavy Duty Conveyor Systems", description: "Reliable material handling solutions for complex factory layouts.", icon: "Repeat", image: "https://images.unsplash.com/photo-1565151443833-29bf2ba5dd8d?auto=format&fit=crop&q=80&w=800" },
+  { id: "linear-motion", title: "Linear Motion Technology", description: "High-precision guided motion components for automated machinery.", icon: "ArrowRightLeft", image: "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=800" },
+  { id: "miscellaneous", title: "Industrial Support Equipment", description: "Supporting tools and peripherals for diverse manufacturing needs.", icon: "Boxes", image: "https://images.unsplash.com/photo-1581092921461-7d15cb89053e?auto=format&fit=crop&q=80&w=800" },
+  { id: "measuring-small", title: "Precision Hand Tools", description: "Compact measuring instruments for mobile quality assurance.", icon: "Ruler", image: "https://images.unsplash.com/photo-1530315598444-24933939379b?auto=format&fit=crop&q=80&w=800" },
+  { id: "measuring-system", title: "3D Scanning & Optical Systems", description: "Non-contact measurement solutions for complex geometries.", icon: "Scan", image: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&q=80&w=800" },
+  { id: "material-testing", title: "Structural Material Testing", description: "Ensuring material integrity through advanced stress analysis equipment.", icon: "HardDrive", image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80&w=800" },
+  { id: "press-machine", title: "Hydraulic & Mechanical Presses", description: "Powerful forming solutions for heavy industrial metalwork.", icon: "Anchor", image: "https://images.unsplash.com/photo-1566353386641-7d1421ab2df1?auto=format&fit=crop&q=80&w=800" },
+  { id: "cnc-machine", title: "Advanced CNC Machining Hubs", description: "Multi-axis milling and turning centers for technical parts.", icon: "Settings", image: "https://images.unsplash.com/photo-1621905252507-b354bcadcabc?auto=format&fit=crop&q=80&w=800" },
+  { id: "others", title: "Custom Technical Solutions", description: "Tailored industrial services for unique manufacturing challenges.", icon: "Plus", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" },
 ];
 
 export const companyData = {

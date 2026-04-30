@@ -1074,18 +1074,32 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
   const [isEditing, setIsEditing] = useState<any>(null);
   const [search, setSearch] = useState('');
 
-  const saveProduct = async (p: any) => {
-    const { error } = await supabase.from('products').upsert(p);
+  const saveProduct = async (productData: any) => {
+    const { id, ...data } = productData;
+    let error;
+    
+    if (id) {
+      const { error: updateError } = await supabase.from('products').update(data).eq('id', id);
+      error = updateError;
+    } else {
+      const { error: insertError } = await supabase.from('products').insert([data]);
+      error = insertError;
+    }
+
     if (!error) {
       setIsEditing(null);
       refresh();
+    } else {
+      console.error('Save error:', error);
+      alert('Error saving product: ' + error.message);
     }
   };
 
   const deleteProduct = async (id: string) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
-    await supabase.from('products').delete().eq('id', id);
-    refresh();
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (!error) refresh();
+    else alert('Error deleting product: ' + error.message);
   };
 
   const filtered = products.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
@@ -1224,10 +1238,19 @@ function MessageManager({ messages, refresh }: { messages: any[], refresh: () =>
     refresh();
   };
 
+  const deleteMessage = async (id: string) => {
+    if (!confirm('Delete this message?')) return;
+    await supabase.from('contacts').delete().eq('id', id);
+    setSelected(null);
+    refresh();
+  };
+
   return (
-    <div className="grid grid-cols-3 gap-12">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
       <div className="col-span-1 space-y-4 max-h-[70vh] overflow-y-auto pr-4 custom-scrollbar">
-         {messages.map(m => (
+         {messages.length === 0 ? (
+           <div className="p-12 text-center text-slate-300 font-bold uppercase tracking-widest text-xs border-2 border-dashed border-slate-100 rounded-3xl">No messages</div>
+         ) : messages.map(m => (
            <div 
             key={m.id} 
             onClick={() => { setSelected(m); if(!m.is_read) markRead(m.id); }}
@@ -1235,7 +1258,7 @@ function MessageManager({ messages, refresh }: { messages: any[], refresh: () =>
            >
               <div className="flex justify-between items-start mb-4">
                  <span className={`px-2 py-1 rounded text-[8px] font-black uppercase tracking-[0.2em] ${selected?.id === m.id ? 'bg-white/20 text-white' : (m.is_read ? 'bg-slate-100 text-slate-400' : 'bg-green-100 text-green-600')}`}>
-                    {m.is_read ? 'Archived' : 'Active'}
+                    {m.is_read ? 'Archived' : 'New'}
                  </span>
                  <span className={`text-[10px] font-bold ${selected?.id === m.id ? 'text-white/60' : 'text-slate-300'}`}>{new Date(m.created_at).toLocaleDateString()}</span>
               </div>
@@ -1245,10 +1268,16 @@ function MessageManager({ messages, refresh }: { messages: any[], refresh: () =>
          ))}
       </div>
 
-      <div className="col-span-2">
+      <div className="lg:col-span-2">
         {selected ? (
-          <div className="bg-white rounded-[3rem] border border-slate-200 p-16 shadow-2xl relative">
-             <div className="flex justify-between items-start mb-12 pb-12 border-b border-slate-100">
+          <div className="bg-white rounded-[3rem] border border-slate-200 p-12 lg:p-16 shadow-2xl relative">
+             <button 
+               onClick={() => deleteMessage(selected.id)}
+               className="absolute top-8 right-8 p-3 rounded-full hover:bg-red-50 text-slate-300 hover:text-red-500 transition-all"
+             >
+                <Trash2 className="w-5 h-5" />
+             </button>
+             <div className="flex justify-between items-start mb-12 pb-12 border-b border-slate-100 pr-12">
                <div>
                   <h3 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">{selected.first_name} {selected.last_name}</h3>
                   <div className="flex items-center gap-3">
