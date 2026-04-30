@@ -36,6 +36,15 @@ export interface Translation {
     fullCatalog: string;
     productDetails: string;
     back: string;
+    featured: string;
+    globalParts: string;
+    cncDescription: string;
+    sqFtArea: string;
+    monitoring: string;
+    onTime: string;
+    delivered: string;
+    virtualConsultation: string;
+    supportCenter: string;
     items: {
       [key: string]: string;
     };
@@ -52,6 +61,7 @@ export interface Translation {
     hubLabel: string;
     hubTitle: string;
     globalSourcing: string;
+    techExcellence: string;
   };
   contact: {
     title: string;
@@ -81,10 +91,14 @@ export interface Translation {
       success: string;
       error: string;
     };
+    automationDesign: string;
+    testingEquipment: string;
+    maintenanceSupport: string;
   };
   product: {
     specTitle: string;
     share: string;
+    longDescription: string;
     specs: {
       material: string;
       precision: string;
@@ -92,10 +106,26 @@ export interface Translation {
       standard: string;
       application: string;
     };
+    stockStatus: string;
+    readyWarehouse: string;
+    response24h: string;
+    quotation: string;
+    identifier: string;
+    category: string;
+    precisionSolutions: string;
+    alloySteel: string;
+    automotiveAero: string;
   };
   footer: {
     rights: string;
     desc: string;
+    solutions: string;
+    industries: string;
+    privacy: string;
+    terms: string;
+    cookies: string;
+    foodBeverage: string;
+    automotiveOem: string;
   };
 }
 
@@ -137,22 +167,27 @@ export const translations: { id: Translation; en: Translation } = {
       fullCatalog: "Katalog Lengkap",
       productDetails: "DETAIL PRODUK",
       back: "Kembali",
+      featured: "Unggulan",
+      globalParts: "Suku Cadang Global",
+      cncDescription: "Penelitian ilmiah, Permesinan, Industri Elektronik, Dirgantara",
+      sqFtArea: "LUAS AREA",
+      monitoring: "PEMANTAUAN",
+      onTime: "TEPAT WAKTU",
+      delivered: "Terkirim",
+      virtualConsultation: "KONSULTASI VIRTUAL",
+      supportCenter: "Pusat Dukungan",
       items: {
         "measuring-testing": "Alat Ukur & Pengujian",
         "robotic-integration": "Robotik & Integrasi",
         "pneumatic-system": "Sistem Pneumatik",
-        "conveyor-system": "Konveyor & Sistem",
-        "linear-motion": "Sistem Gerak Linier",
-        "miscellaneous": "Peralatan Lain-lain",
-        "measuring-small": "Alat Ukur Kecil",
+        "conveyor-system": "Sistem Konveyor",
+        "linear-motion": "Linier Motion System",
+        "miscellaneous": "Miscellaneous Equipment",
+        "measuring-small": "Alat Ukur Kecil (Small Tool)",
         "measuring-system": "Sistem Pengukuran (2D/3D, Optik)",
-        "material-testing": "Alat Uji Material",
+        "material-testing": "Peralatan Pengujian Material",
         "press-machine": "Mesin Press",
-        "cnc-machine": "Materials Testing Machine",
-        "industrial-safety": "Keselamatan Industri",
-        "cutting-tools": "Alat Potong (Cutting Tools)",
-        "hydraulic-systems": "Sistem Hidrolik",
-        "smart-factory": "Solusi Smart Factory",
+        "cnc-machine": "Alat Mesin CNC",
         "others": "Lainnya",
       },
     },
@@ -177,6 +212,7 @@ export const translations: { id: Translation; en: Translation } = {
       hubLabel: "Pusat Distribusi Lokal",
       hubTitle: "MM2100 Bekasi Distribution",
       globalSourcing: "Sourcing Global",
+      techExcellence: "Keunggulan Teknis",
     },
     contact: {
       title: "Hubungi Kami",
@@ -206,10 +242,14 @@ export const translations: { id: Translation; en: Translation } = {
         success: "Pesan berhasil terkirim!",
         error: "Gagal mengirim pesan. Silakan coba lagi.",
       },
+      automationDesign: "Desain Otomasi",
+      testingEquipment: "Peralatan Pengujian",
+      maintenanceSupport: "Dukungan Pemeliharaan",
     },
     product: {
       specTitle: "Detail Spesifikasi Produk",
       share: "Bagikan",
+      longDescription: "Setiap komponen dalam lini produk kami diproduksi dengan presisi ekstrem menggunakan teknologi permesinan mutakhir dan material kelas atas yang tahan terhadap korosi serta suhu ekstrem. Kami mengintegrasikan sistem kontrol kualitas berlapis untuk memastikan bahwa setiap unit yang didistribusikan ke wilayah MM2100 Bekasi memenuhi standar JIS (Japanese Industrial Standards) dan ISO internasional. Dengan fokus pada durabilitas jangka panjang dan efisiensi energi, solusi teknis kami dirancang untuk meminimalkan gesekan mekanis dan mengoptimalkan output produksi Anda, memberikan keandalan yang tak tertandingi bahkan dalam lingkungan manufaktur yang paling menuntut.",
       specs: {
         material: "Material",
         precision: "Presisi",
@@ -217,10 +257,26 @@ export const translations: { id: Translation; en: Translation } = {
         standard: "Standar",
         application: "Aplikasi",
       },
+      stockStatus: "Status Stok",
+      readyWarehouse: "Tersedia di Gudang",
+      response24h: "Respons 24 Jam",
+      quotation: "Minta Penawaran Harga",
+      identifier: "Identifikasi Produk",
+      category: "Kategori Katalog",
+      precisionSolutions: "Solusi Teknik Presisi",
+      alloySteel: "Paduan / Baja Kelas Premium",
+      automotiveAero: "Otomotif / Elektronik / Dirgantara",
     },
     footer: {
       rights: "Semua Hak Dilindungi.",
       desc: "Memberikan layanan perdagangan teknis presisi tinggi dengan keandalan industri dan dukungan ahli untuk wilayah MM2100 Bekasi.",
+      solutions: "Solusi",
+      industries: "Industri",
+      privacy: "Kebijakan Privasi",
+      terms: "Syarat Ketentuan",
+      cookies: "Kebijakan Cookie",
+      foodBeverage: "Makanan & Minuman",
+      automotiveOem: "Otomotif OEM",
     },
   },
   en: {
@@ -260,22 +316,27 @@ export const translations: { id: Translation; en: Translation } = {
       fullCatalog: "Full Catalog",
       productDetails: "PRODUCT DETAILS",
       back: "Back",
+      featured: "Featured",
+      globalParts: "Global Parts",
+      cncDescription: "Scientific research, Machining, Electronic industry, Aerospace",
+      sqFtArea: "SQ FT AREA",
+      monitoring: "MONITORING",
+      onTime: "ON TIME",
+      delivered: "Delivered",
+      virtualConsultation: "VIRTUAL CONSULTATION",
+      supportCenter: "Support Center",
       items: {
         "measuring-testing": "Measuring & Testing Equipment",
         "robotic-integration": "Robotic & Integration",
         "pneumatic-system": "Pneumatic System",
         "conveyor-system": "Conveyor & System",
-        "linear-motion": "Linear Motion System",
+        "linear-motion": "Linier Motion System",
         "miscellaneous": "Miscellaneous Equipment",
         "measuring-small": "Measuring Small Tool",
-        "measuring-system": "Measuring System (2D/3D, Optics)",
+        "measuring-system": "Measuring System, 2D/3D measuring, optics",
         "material-testing": "Material Testing Equipment",
         "press-machine": "Press Machine",
-        "cnc-machine": "Materials Testing Machine",
-        "industrial-safety": "Industrial Safety",
-        "cutting-tools": "Cutting Tools",
-        "hydraulic-systems": "Hydraulic Systems",
-        "smart-factory": "Smart Factory Solutions",
+        "cnc-machine": "CNC Machine Tools",
         "others": "Others",
       },
     },
@@ -300,6 +361,7 @@ export const translations: { id: Translation; en: Translation } = {
       hubLabel: "Local Support Hub",
       hubTitle: "MM2100 Bekasi Distribution",
       globalSourcing: "Global Sourcing",
+      techExcellence: "Technical Excellence",
     },
     contact: {
       title: "Contact Us",
@@ -329,10 +391,14 @@ export const translations: { id: Translation; en: Translation } = {
         success: "Message sent successfully!",
         error: "Failed to send message. Please try again.",
       },
+      automationDesign: "Automation Design",
+      testingEquipment: "Testing Equipment",
+      maintenanceSupport: "Maintenance Support",
     },
     product: {
       specTitle: "Detail Specification Product",
       share: "Share",
+      longDescription: "Each component in our product line is manufactured with extreme precision using cutting-edge machining technology and high-grade materials resistant to corrosion and extreme temperatures. We integrate a multi-layered quality control system to ensure that every unit distributed to the MM2100 Bekasi region meets international JIS (Japanese Industrial Standards) and ISO standards. With a focus on long-term durability and energy efficiency, our technical solutions are designed to minimize mechanical friction and optimize your production output, providing unparalleled reliability even in the most demanding manufacturing environments.",
       specs: {
         material: "Material",
         precision: "Precision",
@@ -340,10 +406,26 @@ export const translations: { id: Translation; en: Translation } = {
         standard: "Standard",
         application: "Application",
       },
+      stockStatus: "Stock Status",
+      readyWarehouse: "Ready in Warehouse",
+      response24h: "24-Hour Response",
+      quotation: "Request Quotation",
+      identifier: "Product Identifier",
+      category: "Catalog Category",
+      precisionSolutions: "Precision Engineering Solutions",
+      alloySteel: "Premium Grade Alloy / Steel",
+      automotiveAero: "Automotive / Electronic / Aero",
     },
     footer: {
       rights: "All Rights Reserved.",
       desc: "Delivering high-precision technical trading services with industrial reliability and expert support for the MM2100 Bekasi region.",
+      solutions: "Solutions",
+      industries: "Industries",
+      privacy: "Privacy Policy",
+      terms: "Terms of Service",
+      cookies: "Cookies Policy",
+      foodBeverage: "Food & Beverage",
+      automotiveOem: "Automotive OEM",
     },
   },
 };
@@ -360,22 +442,18 @@ export const categories = [
   { id: "material-testing", icon: "HardDrive", image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a1930?auto=format&fit=crop&q=80&w=800" },
   { id: "press-machine", icon: "Anchor", image: "https://images.unsplash.com/photo-1566353386641-7d1421ab2df1?auto=format&fit=crop&q=80&w=800" },
   { id: "cnc-machine", icon: "Settings", image: "https://images.unsplash.com/photo-1621905252507-b354bcadcabc?auto=format&fit=crop&q=80&w=800" },
-  { id: "industrial-safety", icon: "Shield", image: "https://images.unsplash.com/photo-1590486803833-2c7dc82c244b?auto=format&fit=crop&q=80&w=800" },
-  { id: "cutting-tools", icon: "Scissors", image: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&q=80&w=800" },
-  { id: "hydraulic-systems", icon: "Droplets", image: "https://images.unsplash.com/photo-1516774435741-10ef396e4c6c?auto=format&fit=crop&q=80&w=800" },
-  { id: "smart-factory", icon: "Binary", image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc4b?auto=format&fit=crop&q=80&w=800" },
   { id: "others", icon: "Plus", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" },
 ];
 
 export const companyData = {
   name: "PT. Presitama Service Industry",
-  address: "Jl. Flores 1 Blok C No. 18, Kawasan Industri MM2100, Cibitung Bekasi 17520, Indonesia",
+  address: "Kawasan Industri MM2100, Cibitung Bekasi 17520, Indonesia",
   email: "presitama01@gmail.com",
   phone: "+6281310318868",
-  businessType: "Trading Company",
+  businessType: "Industrial Service & Trading",
   mapCoordinates: {
-    lat: -6.3108,
-    lng: 107.1121,
+    lat: -6.313468,
+    lng: 107.082684,
   },
 };
 
