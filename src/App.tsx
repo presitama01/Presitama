@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  BrowserRouter as Router, Routes, Route, useNavigate, Navigate, useLocation
+  HashRouter as Router, Routes, Route, useNavigate, Navigate, useLocation, Link
 } from 'react-router-dom';
 import { 
   Menu, X, Globe, Phone, Mail, MapPin, ArrowRight, Gauge, Cpu, Wind, 
@@ -744,8 +744,8 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
               © 2026 PT. Presitama Service Industry.
             </p>
             <div className="flex gap-6 text-[9px] font-bold uppercase tracking-[0.3em] text-slate-600">
-              <a href="#" className="hover:text-white transition-all">Privacy</a>
-              <a href="/admin/login" className="hover:text-white transition-all text-blue-900">Admin Entrance</a>
+              <span className="hover:text-white transition-all cursor-pointer">Privacy</span>
+              <Link to="/admin/login" className="hover:text-white transition-all text-blue-900/40">Admin Entrance</Link>
             </div>
           </div>
         </div>
@@ -1340,13 +1340,19 @@ function AdminLogin() {
   const [err, setErr] = useState('');
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem('isAdmin') === 'true') {
+      navigate('/admin/dashboard', { replace: true });
+    }
+  }, [navigate]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (user === 'Admin' && pass === 'AdminPresitama') {
       localStorage.setItem('isAdmin', 'true');
-      navigate('/admin/dashboard');
+      navigate('/admin/dashboard', { replace: true });
     } else {
-      setErr('Invalid credentials established. Please verify identity.');
+      setErr('Identity verification failed. Please check credentials.');
     }
   };
 
@@ -1392,6 +1398,9 @@ function AdminLogin() {
               <button className="w-full py-6 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center gap-3 group shadow-2xl">
                  Initialize Access <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
+              <div className="text-center pt-6">
+                 <Link to="/" className="text-[10px] font-bold text-slate-300 hover:text-blue-600 uppercase tracking-widest transition-all">← Return to Public Site</Link>
+              </div>
            </form>
         </motion.div>
       </div>
@@ -1419,6 +1428,7 @@ export default function App() {
             <AdminDashboard />
           </PrivateRoute>
         } />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
