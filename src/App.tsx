@@ -19,6 +19,8 @@ import {
 } from 'recharts';
 import { translations, categories, companyData, testimonialsData } from './constants';
 import { supabase } from './lib/supabase';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const categoryIcons: { [key: string]: React.ElementType } = {
   "measuring-testing": Gauge,
@@ -863,11 +865,9 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
                    {/* SPECIFICATION SECTION AT BOTTOM PER REQUEST */}
                    <div className="pt-12 border-t border-slate-100">
                       <h4 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-6">{t.product.specTitle}</h4>
-                      <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed space-y-4">
+                      <div className="max-w-none text-slate-600 leading-relaxed">
                          {selectedProduct.specification ? (
-                           selectedProduct.specification.split('\n').map((para: string, idx: number) => (
-                             <p key={idx}>{para}</p>
-                           ))
+                            <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: selectedProduct.specification }} />
                          ) : (
                             <p>{t.product.longDescription}</p>
                          )}
@@ -1208,7 +1208,15 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
                  </div>
                  <div className="col-span-2">
                     <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Detailed Specification (Paragraphs)</label>
-                    <textarea rows={6} className="w-full p-4 rounded-xl border border-slate-200 font-medium text-sm leading-relaxed" value={isEditing.specification} onChange={e => setIsEditing({...isEditing, specification: e.target.value})} placeholder="Write detailed specification text here. Use new lines for paragraphs." />
+                    <div className="bg-white rounded-xl overflow-hidden border border-slate-200">
+                      <ReactQuill 
+                        theme="snow" 
+                        value={isEditing.specification} 
+                        onChange={val => setIsEditing({...isEditing, specification: val})} 
+                        className="h-64"
+                        placeholder="Write detailed specification text here..."
+                      />
+                    </div>
                  </div>
                  <div className="flex items-center gap-4">
                     <input type="checkbox" className="w-5 h-5 rounded-md accent-blue-600" id="is_best" checked={isEditing.is_best_seller} onChange={e => setIsEditing({...isEditing, is_best_seller: e.target.checked})} />
