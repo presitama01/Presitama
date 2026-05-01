@@ -160,6 +160,115 @@ function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen
   );
 }
 
+function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete }: { prod: any, lang: 'id' | 'en', onClick: () => void | Promise<void>, isAdmin?: boolean, onEdit?: () => void, onDelete?: () => void, key?: any }) {
+  const t = translations[lang];
+  const Icon = categoryIcons[prod.category_id || prod.id] || Plus;
+  const shareUrl = window.location.href;
+  const shareText = `Check out ${prod.title} at ${companyData.name}`;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="group flex flex-col h-full bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500"
+    >
+      {/* Image Area */}
+      <div 
+        className="relative h-64 overflow-hidden cursor-pointer"
+        onClick={onClick}
+      >
+        <img 
+          src={prod.image_url || prod.image} 
+          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" 
+          alt={prod.title}
+        />
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        
+        <div className="absolute top-4 left-4 flex justify-between w-[calc(100%-2rem)] items-start">
+          <div className="p-3 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 text-white">
+            <Icon className="w-5 h-5" />
+          </div>
+          {prod.is_best_seller && (
+            <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-[9px] font-bold uppercase tracking-widest border border-white/20">
+              Best Seller
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Content Area */}
+      <div className="p-6 flex flex-col flex-grow">
+        <div className="mb-4">
+          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1 block">
+            {t.categories.items[prod.category_id || prod.id] || 'Industrial Part'}
+          </span>
+          <h4 
+            className="text-lg font-bold text-slate-900 leading-tight tracking-tight hover:text-blue-600 transition-colors cursor-pointer"
+            onClick={onClick}
+          >
+            {prod.title}
+          </h4>
+        </div>
+
+        <div className="mt-auto flex flex-col gap-3">
+          {isAdmin ? (
+            <div className="flex gap-2">
+              <button 
+                onClick={(e) => { e.stopPropagation(); onEdit?.(); }}
+                className="flex-grow py-3 bg-slate-100 text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all flex items-center justify-center gap-1.5"
+              >
+                <Edit3 className="w-3.5 h-3.5" /> MODIFIKASI
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
+                className="p-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${prod.title}`, '_blank');
+                }}
+                className="flex-grow py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center gap-1.5 group/btn"
+              >
+                MINTA PENAWARAN
+                <ArrowUpRight className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+              </button>
+
+              <div className="flex items-center gap-1">
+                <a 
+                  href={`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`}
+                  target="_blank" rel="noreferrer"
+                  className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-green-500 hover:bg-green-100 transition-all border border-slate-100"
+                  title="WhatsApp"
+                >
+                  <WhatsAppIcon className="w-3.5 h-3.5" />
+                </a>
+                <div className="relative group/share">
+                  <button className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-blue-100 transition-all border border-slate-100">
+                    <Share2 className="w-3.5 h-3.5" />
+                  </button>
+                  <div className="absolute bottom-full right-0 mb-2 hidden group-hover/share:flex flex-col gap-2 bg-white p-2 rounded-xl shadow-xl border border-slate-100 z-30">
+                    <a href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-green-600"><WhatsAppIcon className="w-4 h-4" /></a>
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-blue-600"><Facebook className="w-4 h-4" /></a>
+                    <a href={`https://www.instagram.com/`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-pink-500"><Instagram className="w-4 h-4" /></a>
+                    <a href={`https://www.tiktok.com/`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-slate-900"><Music className="w-4 h-4" /></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpen }: any) {
   const t = translations[lang as 'id' | 'en'];
   
@@ -635,98 +744,14 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            {currentProducts.map((prod, i) => {
-              const Icon = categoryIcons[prod.category_id || prod.id] || Plus;
-              const shareUrl = window.location.href;
-              const shareText = `Check out ${prod.title} at ${companyData.name}`;
-
-              return (
-                <motion.div 
-                  key={prod.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: (i % 4) * 0.1 }}
-                  className="group flex flex-col h-full bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500"
-                >
-                  {/* Image Area */}
-                  <div 
-                    className="relative h-64 overflow-hidden cursor-pointer"
-                    onClick={() => incrementProductView(prod)}
-                  >
-                    <img 
-                      src={prod.image_url || prod.image} 
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110" 
-                      alt={prod.title}
-                    />
-                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    
-                    <div className="absolute top-4 left-4 flex justify-between w-[calc(100%-2rem)] items-start">
-                      <div className="p-3 rounded-xl bg-white/20 backdrop-blur-md border border-white/20 text-white">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      {prod.is_best_seller && (
-                        <span className="px-3 py-1 rounded-full bg-blue-600 text-white text-[9px] font-bold uppercase tracking-widest border border-white/20">
-                          Best Seller
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Content Area */}
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="mb-4">
-                      <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1 block">
-                        {t.categories.items[prod.category_id || prod.id] || 'Industrial Part'}
-                      </span>
-                      <h4 
-                        className="text-lg font-bold text-slate-900 leading-tight tracking-tight hover:text-blue-600 transition-colors cursor-pointer"
-                        onClick={() => incrementProductView(prod)}
-                      >
-                        {prod.title}
-                      </h4>
-                    </div>
-
-                    <div className="mt-auto flex flex-col gap-3">
-                      {/* Interaction Area */}
-                      <div className="flex items-center gap-2">
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            window.open(`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${prod.title}`, '_blank');
-                          }}
-                          className="flex-grow py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center gap-1.5 group/btn"
-                        >
-                          {t.product.quotation.split(' ').slice(0, 2).join(' ')}
-                          <ArrowUpRight className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                        </button>
-
-                        <div className="flex items-center gap-1">
-                          <a 
-                            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`}
-                            target="_blank" rel="noreferrer"
-                            className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-green-500 hover:bg-green-100 transition-all border border-slate-100"
-                            title="WhatsApp"
-                          >
-                            <WhatsAppIcon className="w-3.5 h-3.5" />
-                          </a>
-                          <div className="relative group/share">
-                            <button className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-blue-100 transition-all border border-slate-100">
-                              <Share2 className="w-3.5 h-3.5" />
-                            </button>
-                            <div className="absolute bottom-full right-0 mb-2 hidden group-hover/share:flex flex-col gap-2 bg-white p-2 rounded-xl shadow-xl border border-slate-100 z-30">
-                              <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-blue-600"><Facebook className="w-4 h-4" /></a>
-                              <a href={`https://www.instagram.com/`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-pink-500"><Instagram className="w-4 h-4" /></a>
-                              <a href={`https://www.tiktok.com/`} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-slate-50 text-slate-900"><Music className="w-4 h-4" /></a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {currentProducts.map((prod, i) => (
+              <ProductCard 
+                key={prod.id} 
+                prod={prod} 
+                lang={lang} 
+                onClick={() => incrementProductView(prod)} 
+              />
+            ))}
           </div>
 
           {/* Pagination Controls */}
@@ -992,7 +1017,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   const navigate = useNavigate();
   const t = translations[lang];
 
-  const itemsPerPage = 25; // 5x5 grid
+  const itemsPerPage = 20; // 4x5 grid
 
   useEffect(() => {
     async function fetchProducts() {
@@ -1049,10 +1074,10 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
          </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar Filters */}
-          <aside className="lg:w-72 flex-shrink-0">
+          <aside className="lg:w-64 flex-shrink-0">
             <h2 className="text-xs font-black text-slate-300 uppercase tracking-[0.3em] mb-8">{t.nav.categories}</h2>
             <div className="grid gap-2">
               <button 
@@ -1082,10 +1107,6 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
                   </h1>
                   <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Displaying {filtered.length} total technical solutions</p>
                </div>
-               <div className="bg-slate-50 p-2 rounded-xl flex gap-1">
-                  <button className="p-2 rounded-lg bg-white shadow-sm text-blue-600"><Compass className="w-4 h-4" /></button>
-                  <button className="p-2 rounded-lg text-slate-300 hover:text-slate-900"><Layers className="w-4 h-4" /></button>
-               </div>
             </div>
 
             {loading ? (
@@ -1096,71 +1117,51 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
                  <p className="font-bold uppercase tracking-widest text-xs">No products found matching criteria</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 mb-20">
-                {currentItems.map((prod, idx) => (
-                  <motion.div 
-                    key={prod.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (idx % 10) * 0.05 }}
-                    className="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 shadow-sm flex flex-col"
-                  >
-                    <div className="relative h-48 overflow-hidden cursor-pointer" onClick={() => incrementView(prod)}>
-                      <img src={prod.image_url || prod.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                         <div className="h-10 w-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-2xl scale-50 group-hover:scale-100 transition-all duration-300">
-                             <Eye className="w-4 h-4" />
-                         </div>
-                      </div>
-                    </div>
-                    <div className="p-5 flex flex-col flex-grow">
-                      <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1 truncate">{t.categories.items[prod.category_id || prod.id]}</p>
-                      <h4 className="font-black text-slate-900 text-sm mb-4 leading-tight line-clamp-2 h-10 group-hover:text-blue-600 transition-colors" onClick={() => incrementView(prod)}>
-                        {prod.title}
-                      </h4>
-                      <div className="mt-auto">
-                        <button 
-                          onClick={() => window.open(`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Inquiry: ${prod.title}`, '_blank')}
-                          className="w-full py-2.5 bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-900 hover:text-white transition-all"
-                        >
-                          {t.product.quotation.split(' ').slice(0, 1)} Inquiry
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-4">
-                <button 
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm disabled:opacity-20 hover:border-slate-900 transition-all font-bold text-xs"
-                >
-                  PREVIOUS
-                </button>
-                <div className="flex gap-2">
-                   {[...Array(totalPages)].map((_, i) => (
-                     <button 
-                       key={i}
-                       onClick={() => setCurrentPage(i + 1)}
-                       className={`w-10 h-10 rounded-xl font-bold text-xs transition-all ${currentPage === i + 1 ? 'bg-slate-900 text-white shadow-xl' : 'bg-slate-50 text-slate-400 hover:bg-white border border-transparent hover:border-slate-200'}`}
-                     >
-                       {i + 1}
-                     </button>
-                   ))}
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                  {currentItems.map((prod) => (
+                    <ProductCard 
+                      key={prod.id} 
+                      prod={prod} 
+                      lang={lang} 
+                      onClick={() => incrementView(prod)} 
+                    />
+                  ))}
                 </div>
-                <button 
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm disabled:opacity-20 hover:border-slate-900 transition-all font-bold text-xs"
-                >
-                  NEXT
-                </button>
-              </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-4">
+                    <button 
+                      onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      disabled={currentPage === 1}
+                      className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:border-blue-600 transition-all shadow-sm"
+                    >
+                      <ArrowRight className="w-5 h-5 rotate-180" />
+                    </button>
+                    
+                    <div className="flex gap-2">
+                      {[...Array(totalPages)].map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => { setCurrentPage(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                          className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === i + 1 ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200'}`}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button 
+                      onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      disabled={currentPage === totalPages}
+                      className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:border-blue-600 transition-all shadow-sm"
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -1337,8 +1338,11 @@ function AdminDashboard() {
 function ProductManager({ products, refresh }: { products: any[], refresh: () => void }) {
   const [isEditing, setIsEditing] = useState<any>(null);
   const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const quillRef = useRef<any>(null);
   const editorContainerRef = useRef<HTMLDivElement>(null);
+
+  const itemsPerPage = 20; // 4x5 grid
 
   useEffect(() => {
     if (isEditing && editorContainerRef.current && !quillRef.current) {
@@ -1404,6 +1408,8 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
   };
 
   const filtered = products.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const currentItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="space-y-8">
@@ -1415,7 +1421,7 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
             placeholder="Search items..." 
             className="w-full pl-10 pr-4 py-3 bg-transparent outline-none font-bold text-slate-500 placeholder:text-slate-300"
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
            />
         </div>
         <button 
@@ -1435,35 +1441,51 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-8">
-        {filtered.map(p => (
-           <div key={p.id} className="bg-white rounded-[2.5rem] border border-slate-200 overflow-hidden shadow-sm group">
-              <div className="h-48 bg-slate-100 relative">
-                 <img src={p.image_url} className="w-full h-full object-cover" />
-                 <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-3">
-                    <button onClick={() => setIsEditing(p)} className="h-12 w-12 rounded-xl bg-white text-slate-900 flex items-center justify-center shadow-2xl hover:scale-110 transition-all">
-                       <Edit3 className="w-5 h-5" />
-                    </button>
-                    <button onClick={() => deleteProduct(p.id)} className="h-12 w-12 rounded-xl bg-red-500 text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-all">
-                       <Trash2 className="w-5 h-5" />
-                    </button>
-                 </div>
-              </div>
-              <div className="p-8">
-                 <div className="flex justify-between items-start mb-4">
-                    <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md uppercase tracking-widest">{p.category_id}</span>
-                    <span className="text-[10px] font-bold text-slate-300">{p.id_num}</span>
-                 </div>
-                 <h4 className="font-black text-slate-900 text-lg mb-2 truncate">{p.title}</h4>
-                 <p className="text-xs text-slate-400 font-medium line-clamp-2">{p.description}</p>
-                 <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between text-[10px] font-bold text-slate-300">
-                    <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {p.views_count} queries</span>
-                    {p.is_best_seller && <span className="text-orange-400 uppercase tracking-widest flex items-center gap-1"><Star className="w-3 h-3 fill-orange-400" /> Featured</span>}
-                 </div>
-              </div>
-           </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+        {currentItems.map(p => (
+           <ProductCard 
+             key={p.id} 
+             prod={p} 
+             lang="id" 
+             onClick={() => {}} 
+             isAdmin={true} 
+             onEdit={() => setIsEditing(p)} 
+             onDelete={() => deleteProduct(p.id)} 
+           />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 py-10">
+          <button 
+            onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); }}
+            disabled={currentPage === 1}
+            className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:border-blue-600 transition-all shadow-sm"
+          >
+            <ArrowRight className="w-5 h-5 rotate-180" />
+          </button>
+          
+          <div className="flex gap-2">
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { setCurrentPage(i + 1); }}
+                className={`w-10 h-10 rounded-xl font-bold text-sm transition-all ${currentPage === i + 1 ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-white text-slate-500 border border-slate-100 hover:border-blue-200'}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
+          <button 
+            onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); }}
+            disabled={currentPage === totalPages}
+            className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed hover:border-blue-600 transition-all shadow-sm"
+          >
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {isEditing && (
