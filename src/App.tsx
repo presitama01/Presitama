@@ -192,7 +192,7 @@ function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string)
                 {companyData.name}
               </span>
             </div>
-            <p className="text-slate-400 font-medium leading-relaxed mb-10 text-base max-w-sm">
+            <p className="text-slate-400 font-medium leading-relaxed mb-10 text-[13px] max-w-sm">
               {lang === 'id' 
                 ? 'Penyedia solusi industri terdepan, memberikan layanan terbaik untuk kebutuhan operasional perusahaan Anda.' 
                 : 'Leading industrial solution provider, delivering the best service for your company\'s operational needs.'}
@@ -214,7 +214,7 @@ function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string)
           </div>
 
           <div className="flex flex-col h-full lg:pl-12">
-            <h3 className="font-black text-[12px] uppercase tracking-[0.4em] mb-10 text-blue-500">{lang === 'id' ? 'Akses Cepat' : 'Quick Access'}</h3>
+            <h3 className="font-black text-[10px] uppercase tracking-[0.4em] mb-10 text-blue-500">{lang === 'id' ? 'Akses Cepat' : 'Quick Access'}</h3>
             <div className="grid grid-cols-1 gap-5">
               {[
                 { id: 'home', label: t.nav.home },
@@ -225,7 +225,7 @@ function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string)
                 <button 
                   key={item.id}
                   onClick={() => scrollTo ? scrollTo(item.id) : window.location.href = item.id === 'home' ? '/' : `/#${item.id}`} 
-                  className="text-slate-300 hover:text-white transition-all text-sm font-bold uppercase tracking-widest text-left flex items-center gap-3 group"
+                  className="text-slate-300 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest text-left flex items-center gap-3 group"
                 >
                   <span className="h-px w-0 bg-blue-500 transition-all group-hover:w-4" />
                   {item.label}
@@ -235,7 +235,7 @@ function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string)
           </div>
 
           <div className="flex flex-col h-full">
-            <h3 className="font-black text-[12px] uppercase tracking-[0.4em] mb-10 text-blue-500">Global Localization</h3>
+            <h3 className="font-black text-[10px] uppercase tracking-[0.4em] mb-10 text-blue-500">Global Localization</h3>
             <div className="rounded-[2rem] overflow-hidden h-52 w-full grayscale contrast-125 opacity-40 hover:opacity-100 hover:grayscale-0 transition-all duration-700 bg-slate-900 border border-white/10 shadow-2xl shadow-blue-900/10">
               <iframe 
                 src="https://maps.google.com/maps?q=-6.313468,107.082684&z=17&output=embed" 
@@ -252,11 +252,11 @@ function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string)
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex items-center gap-3">
              <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">
+             <p className="text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em]">
                © 2026 PT. Presitama Service Industry. <span className="hidden md:inline">Built for Excellence.</span>
              </p>
           </div>
-          <div className="flex gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600">
+          <div className="flex gap-10 text-[9px] font-bold uppercase tracking-[0.3em] text-slate-600">
             <span className="hover:text-blue-500 transition-all cursor-pointer">Security</span>
             <span className="hover:text-blue-500 transition-all cursor-pointer">Terms</span>
             <span className="hover:text-blue-500 transition-all cursor-pointer">Privacy</span>
