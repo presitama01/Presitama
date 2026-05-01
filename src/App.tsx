@@ -639,19 +639,41 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
     {
       image: "https://lh3.googleusercontent.com/d/1WKpDZ93a_5rCWh53yBS2kDdK2Fi4UBKi",
       title: t.hero.title,
-      subtitle: t.hero.subtitle
+      subtitle: t.hero.subtitle,
+      project: {
+        name: lang === 'id' ? "Optimasi Jalur Produksi" : "Production Line Optimization",
+        category: lang === 'id' ? "Integrasi Sistem" : "System Integration",
+        tags: ["Robotic", "Automation", "Efficiency"],
+        stats: [
+          { label: lang === 'id' ? "Efisiensi" : "Efficiency", value: "+35%" },
+          { label: lang === 'id' ? "Waktu" : "Time", value: "4 Mo" }
+        ],
+        status: lang === 'id' ? "Selesai Tepat Waktu" : "Delivered on Time",
+        image: "https://lh3.googleusercontent.com/d/1Vv4v7m7u7v7v7v7v7v7v7v7v7v7v7v7" // Placeholder, will use relevant if found
+      }
     },
     {
       image: "https://lh3.googleusercontent.com/d/17jdN9IlQTKxEkE6uFhvbuWFQCVidTnCd",
       title: lang === 'id' ? "Peralatan Pengujian Presisi" : "Precision Testing Equipment",
-      subtitle: lang === 'id' ? "Standar kualitas tinggi untuk hasil pengukuran yang akurat dan andal." : "High quality standards for accurate and reliable measurement results."
+      subtitle: lang === 'id' ? "Standar kualitas tinggi untuk hasil pengukuran yang akurat dan andal." : "High quality standards for accurate and reliable measurement results.",
+      project: {
+        name: lang === 'id' ? "Lab Kontrol Kualitas" : "Quality Control Lab",
+        category: lang === 'id' ? "Instrumen Presisi" : "Precision Instruments",
+        tags: ["Testing", "QC", "Technical"],
+        stats: [
+          { label: lang === 'id' ? "Akurasi" : "Accuracy", value: "99.9%" },
+          { label: lang === 'id' ? "Sertifikasi" : "ISO Cert" }
+        ],
+        status: lang === 'id' ? "Berstandar Internasional" : "International Standard",
+        image: "https://lh3.googleusercontent.com/d/1Wv4v7m7u7v7v7v7v7v7v7v7v7v7v7v"
+      }
     }
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 6000);
+    }, 8000);
     return () => clearInterval(interval);
   }, [heroSlides.length]);
 
@@ -695,7 +717,7 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
 
       <main>
         {/* Hero Section */}
-      <section id="home" className="relative h-screen flex items-center overflow-hidden">
+      <section id="home" className="relative h-screen min-h-[800px] flex items-center overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div 
             key={currentSlide}
@@ -708,57 +730,130 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
             <motion.img 
               src={heroSlides[currentSlide].image} 
               className="w-full h-[110%] object-cover"
-              animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              animate={{ y: [0, -40, 0] }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/60 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent" />
           </motion.div>
         </AnimatePresence>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Text Content */}
+            <div className="max-w-2xl">
+              <motion.div
+                key={`badge-${currentSlide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-blue-600/10 text-blue-400 text-[9px] font-bold uppercase tracking-[0.3em] border border-blue-500/20 mb-6"
+              >
+                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+                {lang === 'id' ? 'TRADING INDUSTRI TERPERCAYA' : 'TRUSTED INDUSTRIAL TRADING'}
+              </motion.div>
+              <motion.h1 
+                key={`title-${currentSlide}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="text-5xl md:text-7xl font-extrabold text-white leading-[1] tracking-tighter mb-8"
+              >
+                {heroSlides[currentSlide].title}
+              </motion.h1>
+              <motion.p 
+                key={`sub-${currentSlide}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+                className="text-xl text-slate-400 font-medium mb-12 max-w-lg leading-relaxed"
+              >
+                {heroSlides[currentSlide].subtitle}
+              </motion.p>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex flex-wrap gap-5"
+              >
+                <button 
+                  onClick={() => scrollTo('categories')}
+                  className="px-10 py-5 bg-white text-slate-900 rounded-full font-black uppercase tracking-widest text-[11px] hover:bg-blue-600 hover:text-white transition-all shadow-2xl flex items-center gap-3 group"
+                >
+                  {t.hero.cta} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button 
+                  onClick={() => scrollTo('contact')}
+                  className="px-10 py-5 bg-slate-900/50 backdrop-blur-md border border-white/10 text-white rounded-full font-black uppercase tracking-widest text-[11px] hover:bg-white/10 transition-all"
+                >
+                  {t.hero.contactCta}
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Right: Hanging Project Card */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-blue-600/10 text-blue-400 text-[9px] font-bold uppercase tracking-[0.3em] border border-blue-500/20 mb-6"
+              key={`card-${currentSlide}`}
+              initial={{ opacity: 0, x: 50, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 50 }}
+              className="hidden lg:block relative"
             >
-              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
-              {lang === 'id' ? 'TRADING INDUSTRI TERPERCAYA' : 'TRUSTED INDUSTRIAL TRADING'}
-            </motion.div>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-4xl md:text-6xl font-extrabold text-white leading-[1.1] tracking-tighter mb-6"
-            >
-              {heroSlides[currentSlide].title}
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg text-slate-400 font-medium mb-10 max-w-lg leading-relaxed"
-            >
-              {heroSlides[currentSlide].subtitle}
-            </motion.p>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-4"
-            >
-              <button 
-                onClick={() => scrollTo('categories')}
-                className="px-8 py-4 bg-white text-slate-900 rounded-full font-bold hover:bg-blue-600 hover:text-white transition-all shadow-xl flex items-center gap-2 group text-sm"
-              >
-                {t.hero.cta} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button 
-                onClick={() => scrollTo('contact')}
-                className="px-8 py-4 bg-slate-900/50 backdrop-blur-md border border-white/10 text-white rounded-full font-bold hover:bg-white/10 transition-all text-sm"
-              >
-                {t.hero.contactCta}
-              </button>
+               <div className="bg-white rounded-[3rem] p-4 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 overflow-hidden max-w-md ml-auto">
+                  {/* Virtual Tour Floating Badge */}
+                  <div className="absolute top-10 -right-4 z-20">
+                     <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-100 animate-bounce duration-[3000ms]">
+                        <div className="h-12 w-12 rounded-xl bg-blue-500 flex items-center justify-center text-white">
+                           <Play className="w-5 h-5 fill-white" />
+                        </div>
+                        <div className="pr-4">
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">360° Virtual Tour</p>
+                           <p className="text-xs font-bold text-slate-900">Explore Facility</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="p-8 pt-10">
+                     <div className="flex flex-wrap gap-2 mb-6">
+                        {heroSlides[currentSlide].project.tags.map(tag => (
+                           <span key={tag} className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full uppercase tracking-wider">{tag}</span>
+                        ))}
+                     </div>
+                     <h3 className="text-3xl font-black text-slate-900 leading-tight mb-2 tracking-tight">
+                        {heroSlides[currentSlide].project.name}
+                     </h3>
+                     <p className="text-sm font-medium text-slate-400 mb-8">{heroSlides[currentSlide].project.category}</p>
+
+                     <div className="rounded-[2.5rem] overflow-hidden aspect-[4/3] mb-8 relative group">
+                        <img 
+                          src={heroSlides[currentSlide].image} 
+                          className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" 
+                        />
+                        <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-all" />
+                     </div>
+
+                     <div className="grid grid-cols-2 gap-4 mb-8">
+                        {heroSlides[currentSlide].project.stats.map(stat => (
+                           <div key={stat.label} className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
+                              <p className="text-sm font-black text-slate-900">{stat.value}</p>
+                           </div>
+                        ))}
+                        <div className="col-span-2 bg-green-50 p-4 rounded-2xl flex items-center justify-center gap-3">
+                           <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                           <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">
+                              {heroSlides[currentSlide].project.status}
+                           </span>
+                        </div>
+                     </div>
+
+                     <button 
+                       onClick={() => scrollTo('about')}
+                       className="w-full py-6 bg-slate-950 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-2 group/btn"
+                     >
+                       {lang === 'id' ? 'LIHAT DETAIL PROYEK' : 'VIEW PROJECT DETAILS'}
+                       <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                     </button>
+                  </div>
+               </div>
             </motion.div>
           </div>
         </div>
