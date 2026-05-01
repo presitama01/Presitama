@@ -43,6 +43,123 @@ const categoryIcons: { [key: string]: React.ElementType } = {
 
 // --- Shared Components ---
 
+// --- Shared Components ---
+
+function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen: boolean, onClose: () => void, lang: 'id' | 'en' }) {
+  const t = translations[lang];
+  if (!product) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"
+          />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative w-full max-w-6xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[95vh] border border-slate-100"
+          >
+            <button 
+              onClick={onClose}
+              className="absolute top-6 right-6 z-30 p-2.5 rounded-full bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-xl"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="overflow-y-auto">
+              {/* TOP SECTION: IMAGE & HEADER */}
+              <div className="flex flex-col md:flex-row">
+                <div className="md:w-[45%] lg:w-[50%] h-[350px] md:h-auto sticky top-0 md:relative">
+                  <img src={product.image_url || product.image} className="w-full h-full object-cover" alt={product.title} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+                </div>
+
+                <div className="md:w-[55%] lg:w-[50%] p-8 md:p-12 lg:p-16 bg-white flex flex-col justify-center">
+                  <div className="flex items-center gap-4 mb-6">
+                    <span className="text-[11px] font-black text-blue-600 uppercase tracking-[0.3em]">{product.id_num || '201'}</span>
+                    <div className="h-px w-8 bg-slate-100" />
+                    <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                      {t.categories.items[product.category_id || product.id] || 'ROBOTIC & INTEGRATION'}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase mb-8 leading-[0.9]">
+                    {product.title}
+                  </h3>
+                  
+                  <p className="text-lg text-slate-500 font-medium leading-[1.6] mb-12 max-w-lg">
+                    {product.description || "Premium industrial component for manufacturing excellence. Built to withstand extreme conditions and deliver high precision."}
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                     <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
+                        <div className="bg-blue-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
+                           <Boxes className="w-5 h-5" />
+                        </div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Status Stok</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">Tersedia di Gudang</p>
+                     </div>
+                     <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
+                        <div className="bg-green-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
+                           <Clock className="w-5 h-5" />
+                        </div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Response Time</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">24/7 Available</p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ACTION BAR: BUTTON & SHARE */}
+              <div className="px-8 md:px-12 lg:px-16 py-8 border-y border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-8">
+                 <a 
+                   href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${product.title}`}
+                   target="_blank"
+                   rel="noreferrer"
+                   className="w-full sm:w-auto px-10 py-6 bg-slate-900 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-4 hover:bg-blue-600 transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
+                 >
+                   Minta Penawaran Harga <ArrowUpRight className="w-5 h-5" />
+                 </a>
+
+                 <div className="flex items-center gap-6">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Bagikan Produk Ini:</span>
+                    <div className="flex gap-3">
+                       <a href={`https://wa.me/?text=Check this out: ${product.title}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-green-600 hover:shadow-xl transition-all"><WhatsAppIcon className="w-5 h-5" /></a>
+                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:shadow-xl transition-all"><Facebook className="w-5 h-5" /></a>
+                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:shadow-xl transition-all"><Instagram className="w-5 h-5" /></a>
+                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-xl transition-all"><Music className="w-5 h-5" /></a>
+                    </div>
+                 </div>
+              </div>
+
+              {/* BOTTOM SECTION: SPECIFICATIONS */}
+              <div className="p-8 md:p-12 lg:p-16">
+                 <h4 className="text-[13px] font-black text-blue-600 uppercase tracking-[0.3em] mb-10 pb-4 border-b-2 border-blue-600 w-fit">
+                    Detail Spesifikasi Produk
+                 </h4>
+                 <div className="max-w-none text-slate-600 leading-[1.8] text-[15px] rich-text-content">
+                    {product.specification ? (
+                       <div dangerouslySetInnerHTML={{ __html: product.specification }} />
+                    ) : (
+                       <p className="font-medium">{t.product.longDescription}</p>
+                    )}
+                 </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpen }: any) {
   const t = translations[lang as 'id' | 'en'];
   
@@ -819,131 +936,12 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
       <Footer lang={lang} scrollTo={scrollTo} />
 
       {/* Product Detail Modal */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedProduct(null)}
-              className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-6xl bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-100"
-            >
-              <button 
-                onClick={() => setSelectedProduct(null)}
-                className="absolute top-6 right-6 z-20 p-3 rounded-full bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-xl"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex flex-col md:flex-row h-full overflow-y-auto">
-                {/* Image Side */}
-                <div className="md:w-1/2 flex flex-col bg-slate-50 border-r border-slate-100">
-                  <div className="relative h-[300px] md:h-auto md:flex-grow">
-                    <img src={selectedProduct.image_url || selectedProduct.image} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                  </div>
-                  
-                  {/* Action Bar Below Image */}
-                  <div className="p-8 md:p-10 bg-white">
-                    <div className="flex flex-col gap-6">
-                      <a 
-                        href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${selectedProduct.title}`}
-                        target="_blank"
-                        className="w-full py-6 bg-slate-900 text-white rounded-3xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:bg-blue-600 transition-all shadow-2xl shadow-blue-200 active:scale-95"
-                      >
-                        {t.product.quotation} <ArrowUpRight className="w-5 h-5" />
-                      </a>
-                      
-                      <div className="flex flex-col items-center gap-4">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">{lang === 'id' ? 'BAGIKAN PRODUK INI:' : 'SHARE THIS PRODUCT:'}</span>
-                        <div className="flex gap-4">
-                          <a 
-                            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(selectedProduct.title + ' ' + window.location.href)}`}
-                            target="_blank" rel="noreferrer"
-                            className="p-4 rounded-2xl bg-slate-50 text-slate-400 hover:text-green-500 hover:bg-green-50 transition-all border border-slate-100 group/shareItem"
-                          >
-                            <WhatsAppIcon className="w-6 h-6" />
-                          </a>
-                          <a 
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-                            target="_blank" rel="noreferrer"
-                            className="p-4 rounded-2xl bg-slate-50 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all border border-slate-100"
-                          >
-                            <Facebook className="w-6 h-6" />
-                          </a>
-                          <a 
-                            href="https://www.instagram.com"
-                            target="_blank" rel="noreferrer"
-                            className="p-4 rounded-2xl bg-slate-50 text-slate-400 hover:text-pink-500 hover:bg-pink-50 transition-all border border-slate-100"
-                          >
-                            <Instagram className="w-6 h-6" />
-                          </a>
-                          <a 
-                            href="https://www.tiktok.com"
-                            target="_blank" rel="noreferrer"
-                            className="p-4 rounded-2xl bg-slate-50 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all border border-slate-100"
-                          >
-                            <Music className="w-6 h-6" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Side */}
-                <div className="md:w-1/2 p-12 lg:p-16 bg-white space-y-12">
-                   <div>
-                      <div className="flex items-center gap-3 mb-6">
-                         <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{selectedProduct.id_num || 'PR-100'}</span>
-                         <div className="w-8 h-[1px] bg-slate-100" />
-                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            {t.categories.items[selectedProduct.category_id || selectedProduct.id] || 'Industrial'}
-                         </span>
-                      </div>
-                      <h3 className="text-4xl font-black text-slate-900 tracking-tighter uppercase mb-6">{selectedProduct.title}</h3>
-                      <p className="text-xl text-slate-500 font-medium leading-relaxed">
-                         {selectedProduct.description || "Premium industrial component for manufacturing excellence. Built to withstand extreme conditions and deliver high precision."}
-                      </p>
-                   </div>
-
-                   <div className="grid grid-cols-2 gap-6">
-                      <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                         <Boxes className="w-6 h-6 text-blue-600 mb-4" />
-                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">{t.product.stockStatus}</p>
-                         <p className="font-bold text-slate-900">{t.product.readyWarehouse}</p>
-                      </div>
-                      <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
-                         <Clock className="w-6 h-6 text-green-600 mb-4" />
-                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Response Time</p>
-                         <p className="font-bold text-slate-900">24/7 Available</p>
-                      </div>
-                   </div>
-
-                   {/* SPECIFICATION SECTION AT BOTTOM PER REQUEST */}
-                   <div className="pt-12 border-t border-slate-100">
-                      <h4 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-6">{t.product.specTitle}</h4>
-                      <div className="max-w-none text-slate-600 leading-relaxed">
-                         {selectedProduct.specification ? (
-                            <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: selectedProduct.specification }} />
-                         ) : (
-                            <p>{t.product.longDescription}</p>
-                         )}
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <ProductModal 
+        product={selectedProduct} 
+        isOpen={!!selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+        lang={lang} 
+      />
 
       {/* Floating Support Center */}
       <div className="fixed bottom-8 right-8 z-40 hidden lg:block">
@@ -1168,79 +1166,13 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
         </div>
       </div>
 
-      {/* REUSED MODAL LOGIC */}
-      <AnimatePresence>
-        {selectedProduct && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedProduct(null)}
-              className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-6xl bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-100"
-            >
-              <button 
-                onClick={() => setSelectedProduct(null)}
-                className="absolute top-6 right-6 z-20 p-3 rounded-full bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-xl"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex flex-col md:flex-row h-full overflow-y-auto">
-                <div className="md:w-1/2 flex flex-col bg-slate-50 border-r border-slate-100">
-                  <div className="relative h-[300px] md:h-auto md:flex-grow">
-                    <img src={selectedProduct.image_url || selectedProduct.image} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                  </div>
-                  <div className="p-8 md:p-10 bg-white">
-                    <div className="flex flex-col gap-6">
-                      <a 
-                        href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${selectedProduct.title}`}
-                        target="_blank"
-                        className="w-full py-6 bg-slate-900 text-white rounded-3xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:bg-blue-600 transition-all shadow-2xl shadow-blue-200"
-                      >
-                        {t.product.quotation} <ArrowUpRight className="w-5 h-5" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="md:w-1/2 p-12 lg:p-16 bg-white space-y-12">
-                   <div>
-                      <div className="flex items-center gap-3 mb-6">
-                         <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{selectedProduct.id_num || 'PR-100'}</span>
-                         <div className="w-8 h-[1px] bg-slate-100" />
-                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            {t.categories.items[selectedProduct.category_id || selectedProduct.id] || 'Industrial'}
-                         </span>
-                      </div>
-                      <h3 className="text-4xl font-black text-slate-900 tracking-tighter uppercase mb-6">{selectedProduct.title}</h3>
-                      <p className="text-xl text-slate-500 font-medium leading-relaxed">
-                         {selectedProduct.description || "Premium industrial component for manufacturing excellence."}
-                      </p>
-                   </div>
-                   <div className="pt-12 border-t border-slate-100">
-                      <h4 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-6">{t.product.specTitle}</h4>
-                      <div className="max-w-none text-slate-600 leading-relaxed">
-                         {selectedProduct.specification ? (
-                            <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: selectedProduct.specification }} />
-                         ) : (
-                            <p>{t.product.longDescription}</p>
-                         )}
-                      </div>
-                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* Product Detail Modal */}
+      <ProductModal 
+        product={selectedProduct} 
+        isOpen={!!selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+        lang={lang} 
+      />
 
       <Footer lang={lang} />
     </div>
