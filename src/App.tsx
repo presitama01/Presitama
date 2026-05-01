@@ -41,6 +41,232 @@ const categoryIcons: { [key: string]: React.ElementType } = {
   "others": Plus,
 };
 
+// --- Shared Components ---
+
+function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpen }: any) {
+  const t = translations[lang as 'id' | 'en'];
+  
+  return (
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/90 backdrop-blur-md py-3 shadow-md' : 'bg-transparent py-5'}`}>
+        <nav className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <div 
+              className="flex items-center gap-3 cursor-pointer group" 
+              onClick={() => {
+                if (window.location.pathname === '/' || window.location.hash === '#/') {
+                   window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                   window.location.href = '/';
+                }
+              }}
+            >
+              <div className="relative">
+                <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center text-white">
+                  <Hammer className="w-5 h-5" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-black text-lg md:text-xl tracking-tighter leading-none text-slate-900">
+                  PT. Presitama Service Industry
+                </span>
+                <span className="text-[9px] md:text-[10px] font-bold text-slate-500 mt-1 tracking-widest">
+                  {lang === 'id' ? 'LAYANAN INDUSTRI & TRADING' : 'INDUSTRIAL SERVICE & TRADING'}
+                </span>
+              </div>
+            </div>
+
+            <div className="hidden md:flex items-center gap-10">
+              <button 
+                onClick={() => scrollTo ? scrollTo('home') : window.location.href = '/'}
+                className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all relative group"
+              >
+                {t.nav.home}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-900 transition-all duration-300 group-hover:w-full" />
+              </button>
+              
+              <div className="relative group">
+                <button className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1 py-4">
+                  {t.nav.categories}
+                  <ChevronRight className="w-4 h-4 rotate-90" />
+                </button>
+                <div className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                   <div className="grid gap-1">
+                      {categories.map(cat => (
+                        <Link 
+                          key={cat.id} 
+                          to={`/showcase?category=${cat.id}`}
+                          className="px-4 py-3 rounded-xl text-xs font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group/cat"
+                        >
+                          {t.categories.items[cat.id]}
+                          <ChevronRight className="w-3 h-3 opacity-0 group-hover/cat:opacity-100 -translate-x-2 group-hover/cat:translate-x-0 transition-all" />
+                        </Link>
+                      ))}
+                   </div>
+                </div>
+              </div>
+
+              {[
+                { id: 'about', label: t.nav.about },
+                { id: 'contact', label: t.nav.contact },
+              ].map((item) => (
+                <button 
+                  key={item.id}
+                  onClick={() => scrollTo ? scrollTo(item.id) : window.location.href = `/#${item.id}`}
+                  className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all relative group"
+                >
+                  {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-900 transition-all duration-300 group-hover:w-full" />
+                </button>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center gap-6">
+              <button 
+                onClick={toggleLang}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all border border-slate-100"
+              >
+                <Globe className="w-4 h-4" />
+                {lang.toUpperCase()}
+              </button>
+              <a 
+                href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-3 rounded-full text-sm font-bold bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-lg flex items-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4" />
+                {t.hero.contactCta}
+              </a>
+            </div>
+
+            <button className="md:hidden p-3" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-white pt-24 px-6 md:hidden"
+          >
+            <div className="flex flex-col gap-8">
+              {['home', 'categories', 'about', 'contact'].map((item) => (
+                <button 
+                  key={item}
+                  onClick={() => scrollTo ? scrollTo(item) : window.location.href = item === 'home' ? '/' : `/#${item}`}
+                  className="text-2xl font-bold text-slate-900 text-left capitalize"
+                >
+                  {t.nav[item as keyof typeof t.nav]}
+                </button>
+              ))}
+              <button onClick={toggleLang} className="text-xl font-bold text-blue-600 text-left flex items-center gap-3">
+                <Globe className="w-6 h-6" /> LANGUAGE: {lang.toUpperCase()}
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function Footer({ lang, scrollTo }: { lang: 'id' | 'en', scrollTo?: (id: string) => void }) {
+  const t = translations[lang];
+  
+  return (
+    <footer className="bg-slate-950 text-white pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid lg:grid-cols-3 gap-16 mb-20 items-start">
+          <div className="flex flex-col h-full">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                <Hammer className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-extrabold text-2xl tracking-tighter italic">
+                {companyData.name}
+              </span>
+            </div>
+            <p className="text-slate-400 font-medium leading-relaxed mb-10 text-base max-w-sm">
+              {lang === 'id' 
+                ? 'Penyedia solusi industri terdepan, memberikan layanan terbaik untuk kebutuhan operasional perusahaan Anda.' 
+                : 'Leading industrial solution provider, delivering the best service for your company\'s operational needs.'}
+            </p>
+            <div className="flex gap-4 mt-auto">
+               <a href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-green-600 hover:border-green-600 transition-all group">
+                 <WhatsAppIcon className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+               </a>
+               <a href="https://facebook.com/presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-all group">
+                 <Facebook className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+               </a>
+               <a href="https://instagram.com/presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-pink-600 hover:border-pink-600 transition-all group">
+                 <Instagram className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+               </a>
+               <a href="https://tiktok.com/@presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-slate-800 hover:border-slate-800 transition-all group">
+                 <Music className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" />
+               </a>
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full lg:pl-12">
+            <h3 className="font-black text-[12px] uppercase tracking-[0.4em] mb-10 text-blue-500">{lang === 'id' ? 'Akses Cepat' : 'Quick Access'}</h3>
+            <div className="grid grid-cols-1 gap-5">
+              {[
+                { id: 'home', label: t.nav.home },
+                { id: 'categories', label: t.nav.categories },
+                { id: 'about', label: t.nav.about },
+                { id: 'contact', label: t.nav.contact }
+              ].map(item => (
+                <button 
+                  key={item.id}
+                  onClick={() => scrollTo ? scrollTo(item.id) : window.location.href = item.id === 'home' ? '/' : `/#${item.id}`} 
+                  className="text-slate-300 hover:text-white transition-all text-sm font-bold uppercase tracking-widest text-left flex items-center gap-3 group"
+                >
+                  <span className="h-px w-0 bg-blue-500 transition-all group-hover:w-4" />
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col h-full">
+            <h3 className="font-black text-[12px] uppercase tracking-[0.4em] mb-10 text-blue-500">Global Localization</h3>
+            <div className="rounded-[2rem] overflow-hidden h-52 w-full grayscale contrast-125 opacity-40 hover:opacity-100 hover:grayscale-0 transition-all duration-700 bg-slate-900 border border-white/10 shadow-2xl shadow-blue-900/10">
+              <iframe 
+                src="https://maps.google.com/maps?q=-6.313468,107.082684&z=17&output=embed" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                loading="lazy"
+                title="Office Location Map"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+             <div className="h-1.5 w-1.5 rounded-full bg-blue-500" />
+             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">
+               © 2026 PT. Presitama Service Industry. <span className="hidden md:inline">Built for Excellence.</span>
+             </p>
+          </div>
+          <div className="flex gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600">
+            <span className="hover:text-blue-500 transition-all cursor-pointer">Security</span>
+            <span className="hover:text-blue-500 transition-all cursor-pointer">Terms</span>
+            <span className="hover:text-blue-500 transition-all cursor-pointer">Privacy</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 // --- HomePage Component ---
 
 function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => void }) {
@@ -201,126 +427,14 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
 
   return (
     <div className="min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900 font-sans">
-      {/* Header */}
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-white/90 backdrop-blur-md py-3 shadow-md' : 'bg-transparent py-5'}`}>
-        <nav className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div 
-              className="flex items-center gap-3 cursor-pointer group" 
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            >
-              <div className="relative">
-                <div className="h-10 w-10 rounded-xl bg-slate-900 flex items-center justify-center text-white">
-                  <Hammer className="w-5 h-5" />
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-black text-lg md:text-xl tracking-tighter leading-none text-slate-900">
-                  PT. Presitama Service Industry
-                </span>
-                <span className="text-[9px] md:text-[10px] font-bold text-slate-500 mt-1 tracking-widest">
-                  {lang === 'id' ? 'LAYANAN INDUSTRI & TRADING' : 'INDUSTRIAL SERVICE & TRADING'}
-                </span>
-              </div>
-            </div>
-
-            <div className="hidden md:flex items-center gap-10">
-              <button 
-                onClick={() => scrollTo('home')}
-                className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all relative group"
-              >
-                {t.nav.home}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-900 transition-all duration-300 group-hover:w-full" />
-              </button>
-              
-              <div className="relative group">
-                <button className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1 py-4">
-                  {t.nav.categories}
-                  <ChevronRight className="w-4 h-4 rotate-90" />
-                </button>
-                <div className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                   <div className="grid gap-1">
-                      {categories.map(cat => (
-                        <Link 
-                          key={cat.id} 
-                          to={`/showcase?category=${cat.id}`}
-                          className="px-4 py-3 rounded-xl text-xs font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group/cat"
-                        >
-                          {t.categories.items[cat.id]}
-                          <ChevronRight className="w-3 h-3 opacity-0 group-hover/cat:opacity-100 -translate-x-2 group-hover/cat:translate-x-0 transition-all" />
-                        </Link>
-                      ))}
-                   </div>
-                </div>
-              </div>
-
-              {[
-                { id: 'about', label: t.nav.about },
-                { id: 'contact', label: t.nav.contact },
-              ].map((item) => (
-                <button 
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all relative group"
-                >
-                  {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-900 transition-all duration-300 group-hover:w-full" />
-                </button>
-              ))}
-            </div>
-
-            <div className="hidden md:flex items-center gap-6">
-              <button 
-                onClick={toggleLang}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-all border border-slate-100"
-              >
-                <Globe className="w-4 h-4" />
-                {lang.toUpperCase()}
-              </button>
-              <a 
-                href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`}
-                target="_blank"
-                rel="noreferrer"
-                className="px-6 py-3 rounded-full text-sm font-bold bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-lg flex items-center gap-2"
-              >
-                <MessageCircle className="w-4 h-4" />
-                {t.hero.contactCta}
-              </a>
-            </div>
-
-            <button className="md:hidden p-3" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 md:hidden"
-          >
-            <div className="flex flex-col gap-8">
-              {['home', 'categories', 'about', 'contact'].map((item) => (
-                <button 
-                  key={item}
-                  onClick={() => scrollTo(item)}
-                  className="text-2xl font-bold text-slate-900 text-left capitalize"
-                >
-                  {t.nav[item as keyof typeof t.nav]}
-                </button>
-              ))}
-              <button onClick={toggleLang} className="text-xl font-bold text-blue-600 text-left flex items-center gap-3">
-                <Globe className="w-6 h-6" /> LANGUAGE: {lang.toUpperCase()}
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Navbar 
+        lang={lang} 
+        toggleLang={toggleLang} 
+        scrollTo={scrollTo} 
+        scrolled={scrolled} 
+        isMenuOpen={isMenuOpen} 
+        setIsMenuOpen={setIsMenuOpen} 
+      />
 
       <main>
         {/* Hero Section */}
@@ -702,82 +816,7 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-white pt-20 pb-10">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-1 lg:col-span-1">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-8 w-8 rounded-lg bg-blue-600 flex items-center justify-center">
-                  <Hammer className="w-4 h-4" />
-                </div>
-                <span className="font-extrabold text-lg md:text-xl tracking-tighter">
-                  {companyData.name}
-                </span>
-              </div>
-              <p className="text-slate-500 font-medium leading-relaxed mb-8 text-sm">
-                {lang === 'id' ? 'Mitra industri terpercaya untuk solusi sourcing berkelanjutan.' : 'Your trusted industrial partner for sustainable sourcing.'}
-              </p>
-              <div className="flex gap-3">
-                {[Instagram, Facebook, Music, Share2].map((Icon, i) => (
-                  <button key={i} className="h-9 w-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-blue-600 hover:border-blue-600 transition-all">
-                    <Icon className="w-4 h-4" />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-[11px] uppercase tracking-[0.2em] mb-6 text-slate-400">{t.nav.categories}</h3>
-              <ul className="space-y-3">
-                {Object.keys(translations.en.categories.items).slice(0, 5).map(key => (
-                  <li key={key}>
-                    <button onClick={() => scrollTo('categories')} className="text-slate-500 hover:text-white transition-all text-[11px] font-bold uppercase tracking-widest text-left">
-                      {t.categories.items[key as keyof typeof t.categories.items]}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-[11px] uppercase tracking-[0.2em] mb-6 text-slate-400">{lang === 'id' ? 'Akses Cepat' : 'Quick Access'}</h3>
-              <ul className="space-y-3 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                {['home', 'categories', 'about', 'contact'].map(item => (
-                  <li key={item}>
-                    <button onClick={() => scrollTo(item)} className="hover:text-white transition-all">
-                      {t.nav[item as keyof typeof t.nav]}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-[11px] uppercase tracking-[0.2em] mb-6 text-slate-400">Map Localization</h3>
-              <div className="rounded-xl overflow-hidden h-32 w-full grayscale contrast-125 opacity-50 hover:opacity-100 hover:grayscale-0 transition-all bg-slate-900 border border-white/5">
-                <iframe 
-                  src="https://maps.google.com/maps?q=-6.313468,107.082684&z=17&output=embed" 
-                  width="100%" 
-                  height="100%" 
-                  style={{ border: 0 }} 
-                  loading="lazy"
-                  title="MM2100 Office Location"
-                ></iframe>
-              </div>
-              <p className="mt-3 text-[10px] text-slate-600 font-bold uppercase tracking-widest text-center">Office Localization</p>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <p className="text-slate-600 text-[9px] font-bold uppercase tracking-[0.3em]">
-              © 2026 PT. Presitama Service Industry.
-            </p>
-            <div className="flex gap-6 text-[9px] font-bold uppercase tracking-[0.3em] text-slate-600">
-              <span className="hover:text-white transition-all cursor-pointer">Privacy</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer lang={lang} scrollTo={scrollTo} />
 
       {/* Product Detail Modal */}
       <AnimatePresence>
@@ -949,6 +988,8 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const t = translations[lang];
@@ -988,43 +1029,27 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans">
-      {/* Mini Nav */}
-      <header className="bg-white border-b border-slate-100 py-6 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-           <Link to="/" className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center text-white">
-                <Hammer className="w-4 h-4" />
-              </div>
-              <span className="font-black text-lg tracking-tighter leading-none text-slate-900 hidden md:block">
-                PT. Presitama
-              </span>
-           </Link>
+    <div className="min-h-screen bg-white font-sans pt-32">
+      <Navbar 
+        lang={lang} 
+        toggleLang={toggleLang} 
+        scrolled={scrolled} 
+        isMenuOpen={isMenuOpen} 
+        setIsMenuOpen={setIsMenuOpen} 
+      />
 
-           <div className="flex-1 max-w-xl mx-8 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder={lang === 'id' ? 'Cari produk...' : 'Search products...'}
-                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-bold text-sm"
-                value={search}
-                onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-              />
-           </div>
-
-           <div className="flex items-center gap-4">
-              <button 
-                onClick={toggleLang}
-                className="px-3 py-2 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
-              >
-                {lang.toUpperCase()}
-              </button>
-              <Link to="/#contact" className="px-6 py-3 rounded-full text-xs font-bold bg-slate-900 text-white hover:bg-blue-600 transition-all">
-                 {t.nav.contact}
-              </Link>
-           </div>
-        </div>
-      </header>
+      <div className="max-w-7xl mx-auto px-6 mb-12">
+         <div className="relative max-w-xl mx-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder={lang === 'id' ? 'Cari produk...' : 'Search products...'}
+              className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-3xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-bold text-sm shadow-sm"
+              value={search}
+              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+            />
+         </div>
+      </div>
 
       <div className="max-w-[1600px] mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-12">
@@ -1217,24 +1242,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <footer className="bg-slate-950 text-white py-12 border-t border-white/5">
-         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-            <div className="flex items-center gap-3">
-              <div className="h-6 w-6 rounded-lg bg-blue-600 flex items-center justify-center">
-                <Hammer className="w-3 h-3" />
-              </div>
-              <span className="font-extrabold text-sm tracking-tighter uppercase opacity-50">
-                PT. Presitama Service Industry
-              </span>
-            </div>
-            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">© 2026. ALL RIGHTS RESERVED.</p>
-            <div className="flex gap-8">
-               <Link to="/" className="text-[10px] font-bold text-slate-600 hover:text-white uppercase tracking-widest">HOME</Link>
-               <Link to="/#contact" className="text-[10px] font-bold text-slate-600 hover:text-white uppercase tracking-widest">CONTACT</Link>
-            </div>
-         </div>
-      </footer>
+      <Footer lang={lang} />
     </div>
   );
 }
