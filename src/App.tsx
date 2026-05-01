@@ -128,13 +128,13 @@ function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen
                    Minta Penawaran Harga <ArrowUpRight className="w-5 h-5" />
                  </a>
 
-                 <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-6">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Bagikan Produk Ini:</span>
                     <div className="flex gap-3">
-                       <a href={`https://wa.me/?text=Check this out: ${product.title}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-green-600 hover:shadow-xl transition-all"><WhatsAppIcon className="w-5 h-5" /></a>
-                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:shadow-xl transition-all"><Facebook className="w-5 h-5" /></a>
-                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:shadow-xl transition-all"><Instagram className="w-5 h-5" /></a>
-                       <a href="#" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-xl transition-all"><Music className="w-5 h-5" /></a>
+                       <a href={`https://wa.me/?text=${encodeURIComponent(`Check out ${product.title} at ${companyData.name}: ${window.location.href}`)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-green-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-green-500 outline-none"><WhatsAppIcon className="w-5 h-5" /></a>
+                       <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-600 outline-none"><Facebook className="w-5 h-5" /></a>
+                       <a href="https://instagram.com/presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-pink-500 outline-none"><Instagram className="w-5 h-5" /></a>
+                       <a href="https://tiktok.com/@presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-xl transition-all focus:ring-2 focus:ring-slate-900 outline-none"><Music className="w-5 h-5" /></a>
                     </div>
                  </div>
               </div>
@@ -160,7 +160,7 @@ function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen
   );
 }
 
-function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete }: { prod: any, lang: 'id' | 'en', onClick: () => void | Promise<void>, isAdmin?: boolean, onEdit?: () => void, onDelete?: () => void, key?: any }) {
+function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete, isShowcase }: { prod: any, lang: 'id' | 'en', onClick: () => void | Promise<void>, isAdmin?: boolean, onEdit?: () => void, onDelete?: () => void, key?: any, isShowcase?: boolean }) {
   const t = translations[lang];
   const Icon = categoryIcons[prod.category_id || prod.id] || Plus;
   const shareUrl = window.location.href;
@@ -175,7 +175,7 @@ function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete }: { prod:
     >
       {/* Image Area */}
       <div 
-        className="relative h-64 overflow-hidden cursor-pointer"
+        className={isShowcase ? "relative h-56 overflow-hidden cursor-pointer" : "relative h-64 overflow-hidden cursor-pointer"}
         onClick={onClick}
       >
         <img 
@@ -198,13 +198,13 @@ function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete }: { prod:
       </div>
 
       {/* Content Area */}
-      <div className="p-6 flex flex-col flex-grow">
+      <div className={isShowcase ? "p-5 flex flex-col flex-grow" : "p-6 flex flex-col flex-grow"}>
         <div className="mb-4">
-          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1 block">
+          <span className="text-[9px] font-bold text-blue-600 uppercase tracking-[0.2em] mb-1 block">
             {t.categories.items[prod.category_id || prod.id] || 'Industrial Part'}
           </span>
           <h4 
-            className="text-lg font-bold text-slate-900 leading-tight tracking-tight hover:text-blue-600 transition-colors cursor-pointer"
+            className={`${isShowcase ? 'text-sm font-bold' : 'text-lg font-bold'} text-slate-900 leading-tight tracking-tight hover:text-blue-600 transition-colors cursor-pointer line-clamp-2`}
             onClick={onClick}
           >
             {prod.title}
@@ -234,7 +234,7 @@ function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete }: { prod:
                   e.stopPropagation();
                   window.open(`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${prod.title}`, '_blank');
                 }}
-                className="flex-grow py-3 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center gap-1.5 group/btn"
+                className={`flex-grow py-3 bg-slate-900 text-white rounded-xl ${isShowcase ? 'text-[9px]' : 'text-[10px]'} font-black uppercase tracking-widest hover:bg-blue-600 transition-all flex items-center justify-center gap-1.5 group/btn`}
               >
                 MINTA PENAWARAN
                 <ArrowUpRight className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
@@ -376,24 +376,55 @@ function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpe
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 md:hidden"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            className="fixed inset-0 z-[60] bg-white pt-24 px-8 md:hidden overflow-y-auto"
           >
-            <div className="flex flex-col gap-8">
-              {['home', 'categories', 'about', 'contact'].map((item) => (
+            <div className="flex flex-col gap-6 pb-12">
+              <button 
+                onClick={() => scrollTo ? scrollTo('home') : window.location.href = '/'}
+                className="text-lg font-extrabold text-slate-900 text-left uppercase tracking-tight"
+              >
+                HOME
+              </button>
+
+              <div className="py-2">
+                 <div className="flex items-center justify-between mb-4">
+                    <span className="text-lg font-extrabold text-slate-900 uppercase tracking-tight">
+                       {t.nav.categories}
+                    </span>
+                 </div>
+                 <div className="grid gap-4 pl-4 border-l border-slate-100">
+                    {categories.map(cat => (
+                      <Link 
+                        key={cat.id} 
+                        to={`/showcase?category=${cat.id}`}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-sm font-bold text-slate-500 hover:text-blue-600 flex items-center justify-between"
+                      >
+                        {t.categories.items[cat.id]}
+                        <ChevronRight className="w-3 h-3" />
+                      </Link>
+                    ))}
+                 </div>
+              </div>
+
+              {['about', 'contact'].map((item) => (
                 <button 
                   key={item}
-                  onClick={() => scrollTo ? scrollTo(item) : window.location.href = item === 'home' ? '/' : `/#${item}`}
-                  className="text-2xl font-bold text-slate-900 text-left capitalize"
+                  onClick={() => scrollTo ? scrollTo(item) : window.location.href = `/#${item}`}
+                  className="text-lg font-extrabold text-slate-900 text-left uppercase tracking-tight"
                 >
                   {t.nav[item as keyof typeof t.nav]}
                 </button>
               ))}
-              <button onClick={toggleLang} className="text-xl font-bold text-blue-600 text-left flex items-center gap-3">
-                <Globe className="w-6 h-6" /> LANGUAGE: {lang.toUpperCase()}
-              </button>
+              
+              <div className="mt-8 pt-8 border-t border-slate-100">
+                <button onClick={toggleLang} className="text-sm font-black text-blue-600 text-left flex items-center gap-3 uppercase tracking-widest">
+                  <Globe className="w-5 h-5" /> {lang === 'id' ? 'GANTI BAHASA' : 'CHANGE LANGUAGE'}: {lang.toUpperCase()}
+                </button>
+              </div>
             </div>
           </motion.div>
         )}
@@ -1017,7 +1048,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   const navigate = useNavigate();
   const t = translations[lang];
 
-  const itemsPerPage = 20; // 4x5 grid
+  const itemsPerPage = 15; // 3x5 grid
 
   useEffect(() => {
     async function fetchProducts() {
@@ -1118,13 +1149,14 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                   {currentItems.map((prod) => (
                     <ProductCard 
                       key={prod.id} 
                       prod={prod} 
                       lang={lang} 
                       onClick={() => incrementView(prod)} 
+                      isShowcase={true}
                     />
                   ))}
                 </div>
