@@ -19,8 +19,8 @@ import {
 } from 'recharts';
 import { translations, categories, companyData, testimonialsData } from './constants';
 import { supabase } from './lib/supabase';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 
 const categoryIcons: { [key: string]: React.ElementType } = {
   "measuring-testing": Gauge,
@@ -1397,6 +1397,43 @@ function AdminDashboard() {
 function ProductManager({ products, refresh }: { products: any[], refresh: () => void }) {
   const [isEditing, setIsEditing] = useState<any>(null);
   const [search, setSearch] = useState('');
+  const quillRef = useRef<any>(null);
+  const editorContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isEditing && editorContainerRef.current && !quillRef.current) {
+      quillRef.current = new Quill(editorContainerRef.current, {
+        theme: 'snow',
+        placeholder: 'Write detailed specification text here...',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'blockquote', 'code-block'],
+            ['clean']
+          ]
+        }
+      });
+
+      quillRef.current.on('text-change', () => {
+        const html = editorContainerRef.current?.querySelector('.ql-editor')?.innerHTML;
+        if (html !== undefined) {
+          setIsEditing((prev: any) => ({ ...prev, specification: html }));
+        }
+      });
+      
+      if (isEditing.specification) {
+        quillRef.current.root.innerHTML = isEditing.specification;
+      }
+    }
+    
+    return () => {
+      if (!isEditing) {
+        quillRef.current = null;
+      }
+    };
+  }, [isEditing]);
 
   const saveProduct = async (productData: any) => {
     const { id, ...data } = productData;
@@ -1533,13 +1570,7 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
                  <div className="col-span-2">
                     <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Detailed Specification (Paragraphs)</label>
                     <div className="bg-white rounded-xl overflow-hidden border border-slate-200">
-                      <ReactQuill 
-                        theme="snow" 
-                        value={isEditing.specification} 
-                        onChange={val => setIsEditing({...isEditing, specification: val})} 
-                        className="h-64"
-                        placeholder="Write detailed specification text here..."
-                      />
+                      <div ref={editorContainerRef} className="h-64" />
                     </div>
                  </div>
                  <div className="flex items-center gap-4">
