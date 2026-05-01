@@ -225,9 +225,36 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
             </div>
 
             <div className="hidden md:flex items-center gap-10">
+              <button 
+                onClick={() => scrollTo('home')}
+                className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all relative group"
+              >
+                {t.nav.home}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-slate-900 transition-all duration-300 group-hover:w-full" />
+              </button>
+              
+              <div className="relative group">
+                <button className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1 py-4">
+                  {t.nav.categories}
+                  <ChevronRight className="w-4 h-4 rotate-90" />
+                </button>
+                <div className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                   <div className="grid gap-1">
+                      {categories.map(cat => (
+                        <Link 
+                          key={cat.id} 
+                          to={`/showcase?category=${cat.id}`}
+                          className="px-4 py-3 rounded-xl text-xs font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group/cat"
+                        >
+                          {t.categories.items[cat.id]}
+                          <ChevronRight className="w-3 h-3 opacity-0 group-hover/cat:opacity-100 -translate-x-2 group-hover/cat:translate-x-0 transition-all" />
+                        </Link>
+                      ))}
+                   </div>
+                </div>
+              </div>
+
               {[
-                { id: 'home', label: t.nav.home },
-                { id: 'categories', label: t.nav.categories },
                 { id: 'about', label: t.nav.about },
                 { id: 'contact', label: t.nav.contact },
               ].map((item) => (
@@ -747,7 +774,6 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
             </p>
             <div className="flex gap-6 text-[9px] font-bold uppercase tracking-[0.3em] text-slate-600">
               <span className="hover:text-white transition-all cursor-pointer">Privacy</span>
-              <Link to="/admin/login" className="hover:text-white transition-all text-blue-900/40">Admin Entrance</Link>
             </div>
           </div>
         </div>
@@ -911,6 +937,304 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
         </motion.div>
       </div>
       </main>
+    </div>
+  );
+}
+
+// --- Product Showcase Component ---
+
+function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => void }) {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const t = translations[lang];
+
+  const itemsPerPage = 25; // 5x5 grid
+
+  useEffect(() => {
+    async function fetchProducts() {
+      setLoading(true);
+      const { data, error } = await supabase.from('products').select('*');
+      if (!error && data) setProducts(data);
+      setLoading(false);
+    }
+    fetchProducts();
+  }, []);
+
+  const queryParams = new URLSearchParams(location.search);
+  const categoryFilter = queryParams.get('category') || '';
+
+  const filtered = products.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter ? p.category_id === categoryFilter : true;
+    return matchesSearch && matchesCategory;
+  });
+
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const currentItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const incrementView = async (prod: any) => {
+    setSelectedProduct(prod);
+    if (!prod.id) return;
+    try {
+      await supabase.rpc('increment_view', { row_id: prod.id });
+    } catch (e) {
+      await supabase.from('products').update({ views_count: (prod.views_count || 0) + 1 }).eq('id', prod.id);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white font-sans">
+      {/* Mini Nav */}
+      <header className="bg-white border-b border-slate-100 py-6 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+           <Link to="/" className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center text-white">
+                <Hammer className="w-4 h-4" />
+              </div>
+              <span className="font-black text-lg tracking-tighter leading-none text-slate-900 hidden md:block">
+                PT. Presitama
+              </span>
+           </Link>
+
+           <div className="flex-1 max-w-xl mx-8 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder={lang === 'id' ? 'Cari produk...' : 'Search products...'}
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-600 transition-all font-bold text-sm"
+                value={search}
+                onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+              />
+           </div>
+
+           <div className="flex items-center gap-4">
+              <button 
+                onClick={toggleLang}
+                className="px-3 py-2 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
+              >
+                {lang.toUpperCase()}
+              </button>
+              <Link to="/#contact" className="px-6 py-3 rounded-full text-xs font-bold bg-slate-900 text-white hover:bg-blue-600 transition-all">
+                 {t.nav.contact}
+              </Link>
+           </div>
+        </div>
+      </header>
+
+      <div className="max-w-[1600px] mx-auto px-6 py-12">
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Sidebar Filters */}
+          <aside className="lg:w-72 flex-shrink-0">
+            <h2 className="text-xs font-black text-slate-300 uppercase tracking-[0.3em] mb-8">{t.nav.categories}</h2>
+            <div className="grid gap-2">
+              <button 
+                onClick={() => { navigate('/showcase'); setCurrentPage(1); }}
+                className={`p-4 rounded-2xl text-left text-xs font-bold transition-all ${!categoryFilter ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-500 hover:bg-slate-50'}`}
+              >
+                ALL PRODUCTS
+              </button>
+              {categories.map(cat => (
+                <button 
+                  key={cat.id}
+                  onClick={() => { navigate(`/showcase?category=${cat.id}`); setCurrentPage(1); }}
+                  className={`p-4 rounded-2xl text-left text-xs font-bold transition-all ${categoryFilter === cat.id ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:bg-slate-50'}`}
+                >
+                  {t.categories.items[cat.id]}
+                </button>
+              ))}
+            </div>
+          </aside>
+
+          {/* Main Grid */}
+          <div className="flex-1">
+            <div className="flex justify-between items-center mb-12">
+               <div className="flex flex-col">
+                  <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">
+                    {categoryFilter ? t.categories.items[categoryFilter] : 'Product Showcase'}
+                  </h1>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Displaying {filtered.length} total technical solutions</p>
+               </div>
+               <div className="bg-slate-50 p-2 rounded-xl flex gap-1">
+                  <button className="p-2 rounded-lg bg-white shadow-sm text-blue-600"><Compass className="w-4 h-4" /></button>
+                  <button className="p-2 rounded-lg text-slate-300 hover:text-slate-900"><Layers className="w-4 h-4" /></button>
+               </div>
+            </div>
+
+            {loading ? (
+              <div className="h-96 flex items-center justify-center"><Loader2 className="w-12 h-12 text-blue-600 animate-spin" /></div>
+            ) : filtered.length === 0 ? (
+              <div className="h-96 flex flex-col items-center justify-center text-slate-300">
+                 <Search className="w-16 h-16 opacity-10 mb-6" />
+                 <p className="font-bold uppercase tracking-widest text-xs">No products found matching criteria</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 mb-20">
+                {currentItems.map((prod, idx) => (
+                  <motion.div 
+                    key={prod.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: (idx % 10) * 0.05 }}
+                    className="group bg-white rounded-3xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 shadow-sm flex flex-col"
+                  >
+                    <div className="relative h-48 overflow-hidden cursor-pointer" onClick={() => incrementView(prod)}>
+                      <img src={prod.image_url || prod.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                         <div className="h-10 w-10 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-2xl scale-50 group-hover:scale-100 transition-all duration-300">
+                             <Eye className="w-4 h-4" />
+                         </div>
+                      </div>
+                    </div>
+                    <div className="p-5 flex flex-col flex-grow">
+                      <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest mb-1 truncate">{t.categories.items[prod.category_id || prod.id]}</p>
+                      <h4 className="font-black text-slate-900 text-sm mb-4 leading-tight line-clamp-2 h-10 group-hover:text-blue-600 transition-colors" onClick={() => incrementView(prod)}>
+                        {prod.title}
+                      </h4>
+                      <div className="mt-auto">
+                        <button 
+                          onClick={() => window.open(`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Inquiry: ${prod.title}`, '_blank')}
+                          className="w-full py-2.5 bg-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-500 rounded-xl hover:bg-slate-900 hover:text-white transition-all"
+                        >
+                          {t.product.quotation.split(' ').slice(0, 1)} Inquiry
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-4">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm disabled:opacity-20 hover:border-slate-900 transition-all font-bold text-xs"
+                >
+                  PREVIOUS
+                </button>
+                <div className="flex gap-2">
+                   {[...Array(totalPages)].map((_, i) => (
+                     <button 
+                       key={i}
+                       onClick={() => setCurrentPage(i + 1)}
+                       className={`w-10 h-10 rounded-xl font-bold text-xs transition-all ${currentPage === i + 1 ? 'bg-slate-900 text-white shadow-xl' : 'bg-slate-50 text-slate-400 hover:bg-white border border-transparent hover:border-slate-200'}`}
+                     >
+                       {i + 1}
+                     </button>
+                   ))}
+                </div>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm disabled:opacity-20 hover:border-slate-900 transition-all font-bold text-xs"
+                >
+                  NEXT
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* REUSED MODAL LOGIC */}
+      <AnimatePresence>
+        {selectedProduct && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProduct(null)}
+              className="absolute inset-0 bg-slate-950/90 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-6xl bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-slate-100"
+            >
+              <button 
+                onClick={() => setSelectedProduct(null)}
+                className="absolute top-6 right-6 z-20 p-3 rounded-full bg-slate-900 text-white hover:bg-blue-600 transition-all shadow-xl"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex flex-col md:flex-row h-full overflow-y-auto">
+                <div className="md:w-1/2 flex flex-col bg-slate-50 border-r border-slate-100">
+                  <div className="relative h-[300px] md:h-auto md:flex-grow">
+                    <img src={selectedProduct.image_url || selectedProduct.image} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                  </div>
+                  <div className="p-8 md:p-10 bg-white">
+                    <div className="flex flex-col gap-6">
+                      <a 
+                        href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${selectedProduct.title}`}
+                        target="_blank"
+                        className="w-full py-6 bg-slate-900 text-white rounded-3xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 hover:bg-blue-600 transition-all shadow-2xl shadow-blue-200"
+                      >
+                        {t.product.quotation} <ArrowUpRight className="w-5 h-5" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="md:w-1/2 p-12 lg:p-16 bg-white space-y-12">
+                   <div>
+                      <div className="flex items-center gap-3 mb-6">
+                         <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{selectedProduct.id_num || 'PR-100'}</span>
+                         <div className="w-8 h-[1px] bg-slate-100" />
+                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            {t.categories.items[selectedProduct.category_id || selectedProduct.id] || 'Industrial'}
+                         </span>
+                      </div>
+                      <h3 className="text-4xl font-black text-slate-900 tracking-tighter uppercase mb-6">{selectedProduct.title}</h3>
+                      <p className="text-xl text-slate-500 font-medium leading-relaxed">
+                         {selectedProduct.description || "Premium industrial component for manufacturing excellence."}
+                      </p>
+                   </div>
+                   <div className="pt-12 border-t border-slate-100">
+                      <h4 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-6">{t.product.specTitle}</h4>
+                      <div className="max-w-none text-slate-600 leading-relaxed">
+                         {selectedProduct.specification ? (
+                            <div className="rich-text-content" dangerouslySetInnerHTML={{ __html: selectedProduct.specification }} />
+                         ) : (
+                            <p>{t.product.longDescription}</p>
+                         )}
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */}
+      <footer className="bg-slate-950 text-white py-12 border-t border-white/5">
+         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-3">
+              <div className="h-6 w-6 rounded-lg bg-blue-600 flex items-center justify-center">
+                <Hammer className="w-3 h-3" />
+              </div>
+              <span className="font-extrabold text-sm tracking-tighter uppercase opacity-50">
+                PT. Presitama Service Industry
+              </span>
+            </div>
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest">© 2026. ALL RIGHTS RESERVED.</p>
+            <div className="flex gap-8">
+               <Link to="/" className="text-[10px] font-bold text-slate-600 hover:text-white uppercase tracking-widest">HOME</Link>
+               <Link to="/#contact" className="text-[10px] font-bold text-slate-600 hover:text-white uppercase tracking-widest">CONTACT</Link>
+            </div>
+         </div>
+      </footer>
     </div>
   );
 }
@@ -1429,6 +1753,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage lang={lang} toggleLang={toggleLang} />} />
+        <Route path="/showcase" element={<ProductShowcase lang={lang} toggleLang={toggleLang} />} />
         <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={
