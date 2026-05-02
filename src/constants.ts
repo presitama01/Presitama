@@ -449,7 +449,7 @@ export const companyData = {
   name: "PT. Presitama Service Industry",
   address: "Kawasan Industri MM2100, Cibitung Bekasi 17520, Indonesia",
   email: "presitama01@gmail.com",
-  phone: "+6281310318868",
+  phone: "+6281310006356",
   businessType: "Industrial Service & Trading",
   mapCoordinates: {
     lat: -6.313468,

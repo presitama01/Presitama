@@ -795,34 +795,39 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
               initial={{ opacity: 0, x: 50, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               transition={{ delay: 0.3, duration: 1, type: "spring", stiffness: 50 }}
-              className="hidden lg:block relative"
+              className="hidden lg:flex items-center gap-6 justify-end relative mt-16"
             >
-               <div className="bg-white rounded-[3rem] p-4 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 overflow-hidden max-w-md ml-auto">
-                  {/* Virtual Tour Floating Badge */}
-                  <div className="absolute top-10 -right-4 z-20">
-                     <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-100 animate-bounce duration-[3000ms]">
-                        <div className="h-12 w-12 rounded-xl bg-blue-500 flex items-center justify-center text-white">
-                           <Play className="w-5 h-5 fill-white" />
-                        </div>
-                        <div className="pr-4">
-                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">360° Virtual Tour</p>
-                           <p className="text-xs font-bold text-slate-900">Explore Facility</p>
-                        </div>
-                     </div>
-                  </div>
+               {/* 360 Badge Beside Card */}
+               <div className="flex-shrink-0">
+                  <motion.div 
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-100"
+                  >
+                    <div className="h-10 w-10 rounded-xl bg-blue-500 flex items-center justify-center text-white">
+                       <Play className="w-4 h-4 fill-white" />
+                    </div>
+                    <div className="pr-4">
+                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">360° Virtual Tour</p>
+                       <p className="text-[11px] font-bold text-slate-900">Facility</p>
+                    </div>
+                  </motion.div>
+               </div>
 
-                  <div className="p-8 pt-10">
-                     <div className="flex flex-wrap gap-2 mb-6">
-                        {heroSlides[currentSlide].project.tags.map(tag => (
-                           <span key={tag} className="px-3 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold rounded-full uppercase tracking-wider">{tag}</span>
+               {/* Smaller Hanging Card */}
+               <div className="bg-white rounded-[2.5rem] p-3 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 overflow-hidden max-w-[320px]">
+                  <div className="p-6">
+                     <div className="flex flex-wrap gap-2 mb-4">
+                        {heroSlides[currentSlide].project.tags.slice(0, 2).map(tag => (
+                           <span key={tag} className="px-2.5 py-1 bg-slate-50 text-slate-500 text-[9px] font-bold rounded-full uppercase tracking-wider">{tag}</span>
                         ))}
                      </div>
-                     <h3 className="text-3xl font-black text-slate-900 leading-tight mb-2 tracking-tight">
+                     <h3 className="text-xl font-black text-slate-900 leading-tight mb-1 tracking-tight">
                         {heroSlides[currentSlide].project.name}
                      </h3>
-                     <p className="text-sm font-medium text-slate-400 mb-8">{heroSlides[currentSlide].project.category}</p>
+                     <p className="text-[11px] font-medium text-slate-400 mb-6">{heroSlides[currentSlide].project.category}</p>
 
-                     <div className="rounded-[2.5rem] overflow-hidden aspect-[4/3] mb-8 relative group">
+                     <div className="rounded-[2rem] overflow-hidden aspect-video mb-6 relative group">
                         <img 
                           src={heroSlides[currentSlide].image} 
                           className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all duration-700" 
@@ -830,16 +835,16 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
                         <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-all" />
                      </div>
 
-                     <div className="grid grid-cols-2 gap-4 mb-8">
+                     <div className="grid grid-cols-2 gap-3 mb-6">
                         {heroSlides[currentSlide].project.stats.map(stat => (
-                           <div key={stat.label} className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
-                              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{stat.label}</p>
-                              <p className="text-sm font-black text-slate-900">{stat.value}</p>
+                           <div key={stat.label} className="bg-slate-50 p-4 rounded-[1.5rem] border border-slate-100">
+                              <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{stat.label}</p>
+                              <p className="text-[11px] font-black text-slate-900">{stat.value}</p>
                            </div>
                         ))}
-                        <div className="col-span-2 bg-green-50 p-4 rounded-2xl flex items-center justify-center gap-3">
-                           <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-                           <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">
+                        <div className="col-span-2 bg-green-50 p-3 rounded-xl flex items-center justify-center gap-2">
+                           <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                           <span className="text-[9px] font-black text-green-600 uppercase tracking-widest">
                               {heroSlides[currentSlide].project.status}
                            </span>
                         </div>
@@ -847,10 +852,10 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
 
                      <button 
                        onClick={() => scrollTo('about')}
-                       className="w-full py-6 bg-slate-950 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-2 group/btn"
+                       className="w-full py-4 bg-slate-950 text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[10px] hover:bg-blue-600 transition-all shadow-xl flex items-center justify-center gap-2 group/btn"
                      >
-                       {lang === 'id' ? 'LIHAT DETAIL PROYEK' : 'VIEW PROJECT DETAILS'}
-                       <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                       {lang === 'id' ? 'DETAIL PROYEK' : 'VIEW DETAILS'}
+                       <ArrowUpRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                      </button>
                   </div>
                </div>
