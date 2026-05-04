@@ -95,47 +95,68 @@ function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen
                   </h3>
                   
                   <p className="text-lg text-slate-500 font-medium leading-[1.6] mb-12 max-w-lg">
-                    {product.description || "Premium industrial component for manufacturing excellence. Built to withstand extreme conditions and deliver high precision."}
+                    {lang === 'id' ? (product.description_id || product.description) : (product.description_en || product.description_id || product.description) || "Premium industrial component for manufacturing excellence. Built to withstand extreme conditions and deliver high precision."}
                   </p>
 
                   <div className="grid grid-cols-2 gap-4">
                      <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
                         <div className="bg-blue-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
-                           <Boxes className="w-5 h-5" />
+                           <Layers className="w-5 h-5" />
                         </div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Status Stok</p>
-                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">Tersedia di Gudang</p>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{t.product.specs.material}</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">{product.material || '-'}</p>
                      </div>
                      <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
                         <div className="bg-green-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
-                           <Clock className="w-5 h-5" />
+                           <Ruler className="w-5 h-5" />
                         </div>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Response Time</p>
-                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">24/7 Available</p>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{t.product.specs.precision}</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">{product.precision || '-'}</p>
+                     </div>
+                     <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
+                        <div className="bg-yellow-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
+                           <Droplets className="w-5 h-5" />
+                        </div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{t.product.specs.temp}</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">{product.operating_temp || '-'}</p>
+                     </div>
+                     <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100/50">
+                        <div className="bg-purple-500 w-10 h-10 rounded-xl flex items-center justify-center text-white mb-4">
+                           <Shield className="w-5 h-5" />
+                        </div>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{t.product.specs.standard}</p>
+                        <p className="text-xs font-black text-slate-900 uppercase tracking-wide">{product.standard || '-'}</p>
                      </div>
                   </div>
                 </div>
               </div>
 
               {/* ACTION BAR: BUTTON & SHARE */}
-              <div className="px-8 md:px-12 lg:px-16 py-8 border-y border-slate-100 bg-slate-50/30 flex flex-col sm:flex-row items-center justify-between gap-8">
-                 <a 
-                   href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${product.title}`}
-                   target="_blank"
-                   rel="noreferrer"
-                   className="w-full sm:w-auto px-10 py-6 bg-slate-900 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-4 hover:bg-blue-600 transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
-                 >
-                   Minta Penawaran Harga <ArrowUpRight className="w-5 h-5" />
-                 </a>
+              <div className="px-8 md:px-12 lg:px-16 py-8 border-y border-slate-100 bg-slate-50/30">
+                 <div className="max-w-4xl mb-8">
+                    <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3">{t.product.specs.application}</p>
+                    <p className="text-sm font-bold text-slate-600 leading-relaxed">{product.application || '-'}</p>
+                 </div>
+                 
+                 <div className="flex flex-col sm:flex-row items-center justify-between gap-8">
+                  <a 
+                    href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}?text=Halo, saya tertarik dengan produk ${product.title}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full sm:w-auto px-10 py-6 bg-slate-900 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-4 hover:bg-blue-600 transition-all shadow-2xl hover:scale-[1.02] active:scale-95"
+                  >
+                    Minta Penawaran Harga <ArrowUpRight className="w-5 h-5" />
+                  </a>
 
-                  <div className="flex items-center gap-6">
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Bagikan Produk Ini:</span>
-                    <div className="flex gap-3">
-                       <a href={`https://wa.me/?text=${encodeURIComponent(`Check out ${product.title} at ${companyData.name}: ${window.location.href}`)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-green-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-green-500 outline-none"><WhatsAppIcon className="w-5 h-5" /></a>
-                       <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-600 outline-none"><Facebook className="w-5 h-5" /></a>
-                       <a href="https://instagram.com/presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-pink-500 outline-none"><Instagram className="w-5 h-5" /></a>
-                       <a href="https://tiktok.com/@presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-xl transition-all focus:ring-2 focus:ring-slate-900 outline-none"><Music className="w-5 h-5" /></a>
-                    </div>
+                   <div className="flex items-center gap-6">
+                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Bagikan Produk Ini:</span>
+                     <div className="flex gap-3">
+                        <a href={`https://wa.me/?text=${encodeURIComponent(`Check out ${product.title} at ${companyData.name}: ${window.location.href}`)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-green-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-green-500 outline-none"><WhatsAppIcon className="w-5 h-5" /></a>
+                        <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-blue-600 outline-none"><Facebook className="w-5 h-5" /></a>
+                        <a href="https://instagram.com/presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 hover:shadow-xl transition-all focus:ring-2 focus:ring-pink-500 outline-none"><Instagram className="w-5 h-5" /></a>
+                        <a href="https://tiktok.com/@presitama" target="_blank" rel="noreferrer" className="h-12 w-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:shadow-xl transition-all focus:ring-2 focus:ring-slate-900 outline-none"><Music className="w-5 h-5" /></a>
+                     </div>
+                  </div>
                  </div>
               </div>
 
@@ -145,10 +166,10 @@ function ProductModal({ product, isOpen, onClose, lang }: { product: any, isOpen
                     Detail Spesifikasi Produk
                  </h4>
                  <div className="max-w-none text-slate-600 leading-[1.8] text-[15px] rich-text-content">
-                    {product.specification ? (
-                       <div dangerouslySetInnerHTML={{ __html: product.specification }} />
+                    {lang === 'id' ? (
+                       product.spec_indonesian ? <div dangerouslySetInnerHTML={{ __html: product.spec_indonesian }} /> : (product.specification ? <div dangerouslySetInnerHTML={{ __html: product.specification }} /> : <p className="font-medium">{t.product.longDescription}</p>)
                     ) : (
-                       <p className="font-medium">{t.product.longDescription}</p>
+                       product.spec_english ? <div dangerouslySetInnerHTML={{ __html: product.spec_english }} /> : (product.spec_indonesian ? <div dangerouslySetInnerHTML={{ __html: product.spec_indonesian }} /> : (product.specification ? <div dangerouslySetInnerHTML={{ __html: product.specification }} /> : <p className="font-medium">{t.product.longDescription}</p>))
                     )}
                  </div>
               </div>
@@ -1477,58 +1498,74 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
   const itemsPerPage = 20; // 4x5 grid
 
   useEffect(() => {
-    if (isEditing && editorContainerRef.current && !quillRef.current) {
-      quillRef.current = new Quill(editorContainerRef.current, {
-        theme: 'snow',
-        placeholder: 'Write detailed specification text here...',
-        modules: {
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['link', 'blockquote', 'code-block'],
-            ['clean']
-          ]
-        }
-      });
-
-      quillRef.current.on('text-change', () => {
-        const html = editorContainerRef.current?.querySelector('.ql-editor')?.innerHTML;
-        if (html !== undefined) {
-          setIsEditing((prev: any) => ({ ...prev, specification: html }));
-        }
-      });
+    if (isEditing && editorContainerRef.current) {
+      const editorType = isEditing._activeEditor || 'spec_indonesian';
       
-      if (isEditing.specification) {
-        quillRef.current.root.innerHTML = isEditing.specification;
+      if (!isEditing[`_quill_${editorType}`]) {
+        const quill = new Quill(editorContainerRef.current, {
+          theme: 'snow',
+          placeholder: `Write detailed specification (${editorType}) text here...`,
+          modules: {
+            toolbar: [
+              [{ 'header': [1, 2, 3, false] }],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              ['link', 'blockquote', 'code-block'],
+              ['clean']
+            ]
+          }
+        });
+
+        quill.on('text-change', () => {
+          const html = editorContainerRef.current?.querySelector('.ql-editor')?.innerHTML;
+          if (html !== undefined) {
+             setIsEditing((prev: any) => ({ ...prev, [editorType]: html }));
+          }
+        });
+        
+        quill.root.innerHTML = isEditing[editorType] || '';
+        setIsEditing((prev: any) => ({ ...prev, [`_quill_${editorType}`]: true }));
       }
     }
-    
-    return () => {
-      if (!isEditing) {
-        quillRef.current = null;
-      }
-    };
-  }, [isEditing]);
+  }, [isEditing?._activeEditor, isEditing?.id]); // Re-init if editor tab changes or product changes
 
   const saveProduct = async (productData: any) => {
-    const { id, ...data } = productData;
+    // Filter out internal state fields
+    const { id, created_at, updated_at, _activeEditor, ...cleanData } = productData;
+    
+    // Remove all internal quill state flags
+    Object.keys(cleanData).forEach(key => {
+      if (key.startsWith('_quill_')) delete (cleanData as any)[key];
+    });
+    
     let error;
     
-    if (id) {
-      const { error: updateError } = await supabase.from('products').update(data).eq('id', id);
-      error = updateError;
-    } else {
-      const { error: insertError } = await supabase.from('products').insert([data]);
-      error = insertError;
-    }
+    try {
+      if (id) {
+        // Update existing product
+        const { error: updateError } = await supabase.from('products').update(cleanData).eq('id', id);
+        error = updateError;
+      } else {
+        // Create new product
+        const { error: insertError } = await supabase.from('products').insert([cleanData]);
+        error = insertError;
+      }
 
-    if (!error) {
-      setIsEditing(null);
-      refresh();
-    } else {
-      console.error('Save error:', error);
-      alert('Error saving product: ' + error.message);
+      if (!error) {
+        setIsEditing(null);
+        refresh();
+      } else {
+        throw error;
+      }
+    } catch (err: any) {
+      console.error('Save error:', err);
+      
+      let friendlyMessage = err.message;
+      if (err.message.includes('column "description"')) {
+        friendlyMessage = "Kolom 'description' tidak ditemukan di database. Silakan jalankan perintah SQL: ALTER TABLE products ADD COLUMN description text;";
+      }
+      
+      alert('Error saving product: ' + friendlyMessage);
     }
   };
 
@@ -1559,17 +1596,25 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
         <button 
           onClick={() => setIsEditing({ 
             title: '', 
-            description: '', 
+            id_num: 'PR-' + (products.length + 101),
             category_id: 'others', 
             image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800', 
-            specification: '',
+            description_id: '',
+            description_en: '',
+            spec_indonesian: '',
+            spec_english: '',
+            material: '',
+            precision: '',
+            operating_temp: '',
+            standard: '',
+            application: '',
             is_best_seller: false,
-            id_num: 'PR-' + (products.length + 101),
-            views_count: 0
+            views_count: 0,
+            _activeEditor: 'spec_indonesian'
           })}
           className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center gap-3 hover:bg-blue-600 transition-all shadow-xl"
         >
-          <Plus className="w-5 h-5" /> Create New
+          <X className="w-5 h-5 pointer-events-none" /> Register New Product
         </button>
       </div>
 
@@ -1657,12 +1702,56 @@ function ProductManager({ products, refresh }: { products: any[], refresh: () =>
                     <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Image Resource URL</label>
                     <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.image_url} onChange={e => setIsEditing({...isEditing, image_url: e.target.value})} />
                  </div>
-                 <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Short Brief</label>
-                    <textarea rows={3} className="w-full p-4 rounded-xl border border-slate-200 font-medium" value={isEditing.description} onChange={e => setIsEditing({...isEditing, description: e.target.value})} />
+                 
+                 {/* Descriptions */}
+                 <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Brief (Indonesian)</label>
+                    <textarea rows={3} className="w-full p-4 rounded-xl border border-slate-200 font-medium" value={isEditing.description_id || isEditing.description} onChange={e => setIsEditing({...isEditing, description_id: e.target.value})} />
                  </div>
+                 <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Brief (English)</label>
+                    <textarea rows={3} className="w-full p-4 rounded-xl border border-slate-200 font-medium" value={isEditing.description_en} onChange={e => setIsEditing({...isEditing, description_en: e.target.value})} />
+                 </div>
+
+                 {/* Tech Specs fields */}
+                 <div className="grid grid-cols-2 gap-4 col-span-2">
+                    <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Material</label>
+                        <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.material} onChange={e => setIsEditing({...isEditing, material: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Precision</label>
+                        <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.precision} onChange={e => setIsEditing({...isEditing, precision: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Op. Temperature</label>
+                        <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.operating_temp} onChange={e => setIsEditing({...isEditing, operating_temp: e.target.value})} />
+                    </div>
+                    <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Standard</label>
+                        <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.standard} onChange={e => setIsEditing({...isEditing, standard: e.target.value})} />
+                    </div>
+                 </div>
+
                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Detailed Specification (Paragraphs)</label>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Main Application / Usage</label>
+                    <input className="w-full p-4 rounded-xl border border-slate-200" value={isEditing.application} onChange={e => setIsEditing({...isEditing, application: e.target.value})} />
+                 </div>
+
+                 <div className="col-span-2">
+                    <div className="flex items-center justify-between mb-2">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Detailed Specifications (Rich Text)</label>
+                        <div className="flex gap-2">
+                            <button 
+                              onClick={() => setIsEditing({...isEditing, _activeEditor: 'spec_indonesian'})}
+                              className={`px-3 py-1 text-[9px] font-black rounded-lg transition-all ${isEditing._activeEditor === 'spec_indonesian' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                            >INDONESIAN</button>
+                            <button 
+                              onClick={() => setIsEditing({...isEditing, _activeEditor: 'spec_english'})}
+                              className={`px-3 py-1 text-[9px] font-black rounded-lg transition-all ${isEditing._activeEditor === 'spec_english' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                            >ENGLISH</button>
+                        </div>
+                    </div>
                     <div className="bg-white rounded-xl overflow-hidden border border-slate-200">
                       <div ref={editorContainerRef} className="h-64" />
                     </div>

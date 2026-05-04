@@ -3,15 +3,24 @@
 -- 1. Create Products Table
 CREATE TABLE products (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  created_at timestamp with time zone DEFAULT now(),
-  title text NOT NULL,
-  description text,
-  specification text,
-  image_url text,
-  category_id text,
   id_num text,
+  title text NOT NULL,
+  category_id text,
+  image_url text,
+  description_id text,
+  description_en text,
+  spec_indonesian text,
+  spec_english text,
+  material text,
+  precision text,
+  operating_temp text,
+  standard text,
+  application text,
+  description text,
   is_best_seller boolean DEFAULT false,
-  views_count integer DEFAULT 0
+  views_count integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now()
 );
 
 -- 2. Create Contacts Table
