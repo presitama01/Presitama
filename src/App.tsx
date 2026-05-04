@@ -885,6 +885,93 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
         </div>
       </section>
 
+      {/* Partner Logo Slider Section */}
+      <div className="py-16 bg-white border-b border-slate-100 overflow-hidden relative">
+        <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-white to-transparent z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-white to-transparent z-10" />
+        
+        <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.5em] mb-2">Authorized Global Partners</p>
+          <div className="h-px w-12 bg-blue-500 mx-auto" />
+        </div>
+
+        <div className="flex">
+          <motion.div 
+            className="flex items-center gap-20 whitespace-nowrap py-4"
+            animate={{ x: [-1920, 0] }}
+            transition={{ 
+              duration: 40, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+          >
+            {[
+              { name: "DINAMEC", url: "https://lh3.googleusercontent.com/d/10WsV2QAE-dNBurrTsTmHCoYoi4uRpC7v" },
+              { name: "BAOTN", url: "https://lh3.googleusercontent.com/d/10FA-PELWNqU9lFTzN4shpjDqq2gbQwCo" },
+              { name: "HIWIN", url: "https://lh3.googleusercontent.com/d/1QTAiVgRzo6daPWNDFaOJOfKhPaq29Zol" },
+              { name: "EPSON", url: "https://lh3.googleusercontent.com/d/1B1YKl7ucFX3-Rh4zxclH-WbvP3EI7i2j" },
+              { name: "MIKROTEST", url: "https://lh3.googleusercontent.com/d/1Z9HmLvmF3eHCSyU0lLCCUlTJlAcg_ObN" },
+              { name: "SUNPOE", url: "https://lh3.googleusercontent.com/d/16dHAbOpQ1a4KZQZzj2WWMDGa78S8Vkot" },
+              { name: "TERM", url: "https://lh3.googleusercontent.com/d/1-40NdzQLpn0mS2SgAmhFstO5_zkrGwIU" },
+              { name: "METROLOGY", url: "https://lh3.googleusercontent.com/d/1iswpwp9x7W7WaPB1Ql2ghrs1NbeRfkPl" },
+              { name: "BLCH", url: "https://lh3.googleusercontent.com/d/1ZD6isiB47wj8AJkrWc7ZdEkAc0uIR1JK" },
+              { name: "DE-UN", url: "https://lh3.googleusercontent.com/d/1cCcaBoL2iME__OdJDcC52ZCSo1_i4vBq" }
+            ].map((brand, index) => (
+              <div 
+                key={`${brand.name}-${index}`} 
+                className="flex items-center justify-center px-10 grayscale hover:grayscale-0 transition-all duration-500 opacity-60 hover:opacity-100"
+              >
+                <img 
+                  src={brand.url} 
+                  alt={brand.name}
+                  className="h-14 w-auto object-contain max-w-[200px]"
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    // Fallback to text if image fails to load
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    if (parent && !parent.querySelector('.fallback-text')) {
+                      const span = document.createElement('span');
+                      span.className = "fallback-text text-2xl font-black italic text-slate-300";
+                      span.innerText = brand.name;
+                      parent.appendChild(span);
+                    }
+                  }}
+                />
+              </div>
+            ))}
+            
+            {/* Duplicate for seamless looping */}
+            {[
+              { name: "DINAMEC", url: "https://lh3.googleusercontent.com/d/10WsV2QAE-dNBurrTsTmHCoYoi4uRpC7v" },
+              { name: "BAOTN", url: "https://lh3.googleusercontent.com/d/10FA-PELWNqU9lFTzN4shpjDqq2gbQwCo" },
+              { name: "HIWIN", url: "https://lh3.googleusercontent.com/d/1QTAiVgRzo6daPWNDFaOJOfKhPaq29Zol" },
+              { name: "EPSON", url: "https://lh3.googleusercontent.com/d/1B1YKl7ucFX3-Rh4zxclH-WbvP3EI7i2j" },
+              { name: "MIKROTEST", url: "https://lh3.googleusercontent.com/d/1Z9HmLvmF3eHCSyU0lLCCUlTJlAcg_ObN" },
+              { name: "SUNPOE", url: "https://lh3.googleusercontent.com/d/16dHAbOpQ1a4KZQZzj2WWMDGa78S8Vkot" },
+              { name: "TERM", url: "https://lh3.googleusercontent.com/d/1-40NdzQLpn0mS2SgAmhFstO5_zkrGwIU" },
+              { name: "METROLOGY", url: "https://lh3.googleusercontent.com/d/1iswpwp9x7W7WaPB1Ql2ghrs1NbeRfkPl" },
+              { name: "BLCH", url: "https://lh3.googleusercontent.com/d/1ZD6isiB47wj8AJkrWc7ZdEkAc0uIR1JK" },
+              { name: "DE-UN", url: "https://lh3.googleusercontent.com/d/1cCcaBoL2iME__OdJDcC52ZCSo1_i4vBq" }
+            ].map((brand, index) => (
+              <div 
+                key={`${brand.name}-dup-${index}`} 
+                className="flex items-center justify-center px-10 grayscale hover:grayscale-0 transition-all duration-500 opacity-60 hover:opacity-100"
+              >
+                <img 
+                  src={brand.url} 
+                  alt={brand.name}
+                  className="h-14 w-auto object-contain max-w-[200px]"
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+
       {/* Catalog Grid Section */}
       <section id="categories" className="py-24 bg-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
