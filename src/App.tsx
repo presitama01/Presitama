@@ -292,6 +292,22 @@ function ProductCard({ prod, lang, onClick, isAdmin, onEdit, onDelete, isShowcas
 
 function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpen }: any) {
   const t = translations[lang as 'id' | 'en'];
+  const [activeCategories, setActiveCategories] = useState<any[]>(categories);
+
+  useEffect(() => {
+    async function fetchActiveCategories() {
+      const { data, error } = await supabase.from('products').select('category_id');
+      if (!error && data) {
+        const activeIds = Array.from(new Set(data.map(p => p.category_id))).filter(Boolean);
+        const displayCategories = categories.filter(cat => activeIds.includes(cat.id));
+        const extraCategories = activeIds
+          .filter(id => !categories.find(cat => cat.id === id))
+          .map(id => ({ id, title: id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }));
+        setActiveCategories([...displayCategories, ...extraCategories]);
+      }
+    }
+    fetchActiveCategories();
+  }, []);
   
   return (
     <>
@@ -339,13 +355,13 @@ function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpe
                 </button>
                 <div className="absolute top-full left-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-100 p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                    <div className="grid gap-1">
-                      {categories.map(cat => (
+                      {activeCategories.map(cat => (
                         <Link 
                           key={cat.id} 
                           to={`/showcase?category=${cat.id}`}
                           className="px-4 py-3 rounded-xl text-xs font-bold text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center justify-between group/cat"
                         >
-                          {t.categories.items[cat.id]}
+                          {t.categories.items[cat.id] || cat.title || cat.id}
                           <ChevronRight className="w-3 h-3 opacity-0 group-hover/cat:opacity-100 -translate-x-2 group-hover/cat:translate-x-0 transition-all" />
                         </Link>
                       ))}
@@ -417,14 +433,14 @@ function Navbar({ lang, toggleLang, scrollTo, scrolled, isMenuOpen, setIsMenuOpe
                     </span>
                  </div>
                  <div className="grid gap-4 pl-4 border-l border-slate-100">
-                    {categories.map(cat => (
+                    {activeCategories.map(cat => (
                       <Link 
                         key={cat.id} 
                         to={`/showcase?category=${cat.id}`}
                         onClick={() => setIsMenuOpen(false)}
                         className="text-sm font-bold text-slate-500 hover:text-blue-600 flex items-center justify-between"
                       >
-                        {t.categories.items[cat.id]}
+                        {t.categories.items[cat.id] || cat.title || cat.id}
                         <ChevronRight className="w-3 h-3" />
                       </Link>
                     ))}
@@ -1259,6 +1275,16 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   const queryParams = new URLSearchParams(location.search);
   const categoryFilter = queryParams.get('category') || '';
 
+  const activeCategoryIds = Array.from(new Set(products.map(p => p.category_id))).filter(Boolean);
+  const displayCategories = categories.filter(cat => activeCategoryIds.includes(cat.id));
+  
+  // Add categories from DB that are not in constants
+  const extraCategories = activeCategoryIds
+    .filter(id => !categories.find(cat => cat.id === id))
+    .map(id => ({ id, title: id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }));
+
+  const finalCategories = [...displayCategories, ...extraCategories];
+
   const filtered = products.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter ? p.category_id === categoryFilter : true;
@@ -1313,13 +1339,13 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
               >
                 ALL PRODUCTS
               </button>
-              {categories.map(cat => (
+              {finalCategories.map(cat => (
                 <button 
                   key={cat.id}
                   onClick={() => { navigate(`/showcase?category=${cat.id}`); setCurrentPage(1); }}
                   className={`p-4 rounded-2xl text-left text-xs font-bold transition-all ${categoryFilter === cat.id ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:bg-slate-50'}`}
                 >
-                  {t.categories.items[cat.id]}
+                  {t.categories.items[cat.id] || (cat as any).title || cat.id}
                 </button>
               ))}
             </div>
@@ -1330,7 +1356,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
             <div className="flex justify-between items-center mb-12">
                <div className="flex flex-col">
                   <h1 className="text-4xl font-black text-slate-900 tracking-tighter mb-2">
-                    {categoryFilter ? t.categories.items[categoryFilter] : 'Product Showcase'}
+                    {categoryFilter ? (t.categories.items[categoryFilter] || finalCategories.find(c => c.id === categoryFilter)?.title || categoryFilter) : 'Product Showcase'}
                   </h1>
                   <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Displaying {filtered.length} total technical solutions</p>
                </div>
