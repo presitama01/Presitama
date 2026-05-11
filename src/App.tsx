@@ -1067,7 +1067,7 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
 
               <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <div className="text-3xl font-bold text-white tracking-tight mb-1">12+</div>
+                  <div className="text-3xl font-bold text-white tracking-tight mb-1">1+</div>
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{t.about.experience}</p>
                 </div>
                 <div>
@@ -1207,35 +1207,23 @@ function HomePage({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: () => v
         lang={lang} 
       />
 
-      {/* Floating Support Center */}
-      <div className="fixed bottom-8 right-8 z-40 hidden lg:block">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl shadow-2xl p-6 border border-slate-100 flex items-center gap-6 max-w-sm"
+      {/* Floating WhatsApp Button */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <motion.a 
+          href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`}
+          target="_blank"
+          rel="noreferrer"
+          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="h-14 w-14 rounded-full bg-green-500 flex items-center justify-center text-white shadow-2xl hover:bg-green-600 transition-colors"
         >
-          <div className="relative">
-            <div className="h-12 w-12 rounded-full bg-green-500 flex items-center justify-center text-white">
-              <Phone className="w-6 h-6" />
-            </div>
-            <div className="absolute -top-1 -right-1 h-4 w-4 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
-              <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse" />
-            </div>
+          <WhatsAppIcon className="w-8 h-8" />
+          <div className="absolute -top-1 -right-1 h-4 w-4 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
+            <div className="h-1.5 w-1.5 bg-white rounded-full animate-pulse" />
           </div>
-            <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{t.categories.supportCenter}</p>
-            <p className="text-sm font-bold text-slate-900 leading-tight">
-              {lang === 'id' ? 'Gratis Konsultasi Teknis' : 'Free Technical Consulting'}
-            </p>
-            <a 
-              href={`https://wa.me/${companyData.phone.replace(/\D/g, '')}`}
-              target="_blank"
-              className="text-[10px] font-black text-blue-600 uppercase tracking-widest mt-2 block hover:translate-x-1 transition-transform"
-            >
-              {lang === 'id' ? 'Hubungi Sekarang' : 'Connect Now'} →
-            </a>
-          </div>
-        </motion.div>
+        </motion.a>
       </div>
       </main>
     </div>
