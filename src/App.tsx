@@ -1281,7 +1281,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
   // Add categories from DB that are not in constants
   const extraCategories = activeCategoryIds
     .filter(id => !categories.find(cat => cat.id === id))
-    .map(id => ({ id, title: id.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }));
+    .map(id => ({ id: String(id), title: String(id).replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) }));
 
   const finalCategories = [...displayCategories, ...extraCategories];
 
@@ -1345,7 +1345,7 @@ function ProductShowcase({ lang, toggleLang }: { lang: 'id' | 'en', toggleLang: 
                   onClick={() => { navigate(`/showcase?category=${cat.id}`); setCurrentPage(1); }}
                   className={`p-4 rounded-2xl text-left text-xs font-bold transition-all ${categoryFilter === cat.id ? 'bg-blue-600 text-white shadow-xl' : 'text-slate-500 hover:bg-slate-50'}`}
                 >
-                  {t.categories.items[cat.id] || (cat as any).title || cat.id}
+                  {t.categories.items[cat.id as keyof typeof t.categories.items] || (cat as any).title || cat.id}
                 </button>
               ))}
             </div>

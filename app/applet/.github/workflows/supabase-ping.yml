@@ -1,0 +1,36 @@
+name: Ping Supabase (Keep Alive)
+
+on:
+  schedule:
+    # Runs every 2 days at midnight UTC
+    - cron: '0 0 */2 * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Ping to Supabase REST API
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Error: SUPABASE_URL and SUPABASE_ANON_KEY secrets must be configured in GitHub repository settings."
+            exit 1
+          fi
+          
+          echo "Pinging Supabase at $SUPABASE_URL..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET \
+            "$SUPABASE_URL/rest/v1/" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+            
+          echo "HTTP Response Code: $response"
+          
+          if [ "$response" -ge 200 ] && [ "$response" -lt 300 ]; then
+            echo "Successfully pinged Supabase!"
+          else
+            echo "Warning: Received HTTP status code $response"
+            # We don't necessarily want to fail the job if Supabase returns 401/403/etc as long as it woke up, but 2xx is ideal.
+          fi
