@@ -2,34 +2,37 @@ name: Ping Supabase (Keep Alive)
 
 on:
   schedule:
-    # Runs every 2 days at midnight UTC
+    # Runs every 2 days at 00:00 UTC to keep Supabase project active
     - cron: '0 0 */2 * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab anytime
 
 jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Ping to Supabase REST API
+      - name: Ping Supabase Database Query
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          # Uses GitHub Secrets if set, otherwise falls back to public project credentials
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL || 'https://wnfvztqwtidhyjczaira.supabase.co' }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InduZnZ6dHF3dGlkaHlqY3phaXJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzUyMzQsImV4cCI6MjA5MzA1MTIzNH0.5cJzHQwnA9sOYNE6XplKqzLyBDh6mjIOUTooTf4_Hs0' }}
         run: |
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-            echo "Error: SUPABASE_URL and SUPABASE_ANON_KEY secrets must be configured in GitHub repository settings."
-            exit 1
-          fi
+          echo "Connecting to Supabase at: $SUPABASE_URL"
           
-          echo "Pinging Supabase at $SUPABASE_URL..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" -X GET \
-            "$SUPABASE_URL/rest/v1/" \
-            -H "apikey: $SUPABASE_ANON_KEY" \
-            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
-            
-          echo "HTTP Response Code: $response"
-          
-          if [ "$response" -ge 200 ] && [ "$response" -lt 300 ]; then
-            echo "Successfully pinged Supabase!"
+          # Query a row from the database so PostgreSQL counts active database query traffic
+          response_file=$(mktemp)
+          http_code=$(curl -s -w "%{http_code}" -o "$response_file" -X GET \
+            "${SUPABASE_URL}/rest/v1/products?select=id&limit=1" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+
+          echo "HTTP Response Status: $http_code"
+          echo "Response Body: $(cat $response_file)"
+          rm -f "$response_file"
+
+          if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+            echo "✅ SUCCESS: Supabase PostgreSQL database queried successfully. Inactivity timer reset!"
+            exit 0
           else
-            echo "Warning: Received HTTP status code $response"
+            echo "❌ ERROR: Query failed with HTTP $http_code"
+            exit 1
           fi
